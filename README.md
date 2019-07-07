@@ -1,2 +1,10 @@
 # WeVote
-A DApp for electoral voting and polling based on ethereum blockchain, powered by Azure Blockchain Service.
+A Distributed Application for Electoral Voting and Polling, based on ethereum blockchain.
+___
+#### Team 
+    - Kunal Tawatia
+    - Priyanshi Jain
+    - Venkatesh Kotwade
+    
+    WeBug
+    Indian Institute of Technology, Jodhpur
