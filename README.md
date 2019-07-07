@@ -6,5 +6,5 @@ ___
     - Priyanshi Jain
     - Venkatesh Kotwade
     
-    Team alphaWeBug 
+    WeBug 
     Indian Institute of Technology, Jodhpur
