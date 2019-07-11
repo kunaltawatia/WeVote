@@ -1,4 +1,4 @@
-# WeVote [![Build Status](https://dev.azure.com/kunaltawatia/WeVote/_apis/build/status/kunaltawatia.WeVote?branchName=master)](https://dev.azure.com/kunaltawatia/WeVote/_build/latest?definitionId=2&branchName=master)
+# WeVote
 A Distributed Application for Electoral Voting and Polling, based on ethereum blockchain.
 ___
 ## Deploy WeVote
