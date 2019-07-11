@@ -24,9 +24,4 @@ steps:
   inputs:
     azureSubscription: 'Free Trial(5caeab08-ef5c-4460-a247-2dd102b225f7)'
     scriptLocation: 'inlineScript'
-    inlineScript: 'ls $(Build.Repository.LocalPath) && ls $(Build.BinariesDirectory) && ls $(Build.SourcesDirectory) && ls $(Build.StagingDirectory)'
-- task: AzureCLI@1
-  inputs:
-    azureSubscription: 'Free Trial(5caeab08-ef5c-4460-a247-2dd102b225f7)'
-    scriptLocation: 'inlineScript'
-    inlineScript: 'az storage blob upload-batch -d "$web" --account-name "deploywebug" -s "$(Build.Repository.LocalPath)"'
+    inlineScript: 'az storage blob upload-batch -d "\$web" --account-name "deploywebug" -s "$(Build.Repository.LocalPath)/build"'
