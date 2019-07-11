@@ -10,18 +10,18 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-# - task: NodeTool@0
-#   inputs:
-#     versionSpec: '10.x'
-#   displayName: 'Install Node.js'
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
 
-# - script: |
-#     npm install
-#     npm run build
-#   displayName: 'npm install and build'
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm install and build'
 
 - task: AzureCLI@1
   inputs:
     azureSubscription: 'Free Trial(5caeab08-ef5c-4460-a247-2dd102b225f7)'
     scriptLocation: 'inlineScript'
-    inlineScript: 'ls $(Build.Repository.LocalPath)'
+    inlineScript: 'ls $(Build.Repository.LocalPath) && ls $(Build.BinariesDirectory) && ls $(Build.SourcesDirectory) && ls $(Build.StagingDirectory)'
