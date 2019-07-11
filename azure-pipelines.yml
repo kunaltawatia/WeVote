@@ -19,11 +19,3 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
-  
-- task: AzureFileCopy@3
-  inputs:
-    SourcePath: '$(Build.SourcesDirectory)/build'
-    azureSubscription: 'Free Trial(5caeab08-ef5c-4460-a247-2dd102b225f7)'
-    Destination: 'AzureBlob'
-    storage: 'deploywebug'
-    ContainerName: 'wevote'
