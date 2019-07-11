@@ -24,4 +24,4 @@ steps:
   inputs:
     azureSubscription: 'Free Trial(5caeab08-ef5c-4460-a247-2dd102b225f7)'
     scriptLocation: 'inlineScript'
-    inlineScript: 'az storage blob upload-batch -d "webug" --account-name "webug" -s "$(Build.Repository.LocalPath)"'
+    inlineScript: 'az storage blob upload-batch -d "deploywebug" --account-name "deploywebug" -s "$(Build.Repository.LocalPath)"'
