@@ -1,4 +1,11 @@
 # Node.js with React
+- task: AzureFileCopy@3
+  inputs:
+    SourcePath: '$(Build.SourcesDirectory)/build'
+    azureSubscription: 'Free Trial(5caeab08-ef5c-4460-a247-2dd102b225f7)'
+    Destination: 'AzureBlob'
+    storage: 'deploywebug'
+    ContainerName: 'wevote'
 # Build a Node.js project that uses React.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
