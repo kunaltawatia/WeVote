@@ -1,7 +1,8 @@
 # WeVote [![Build Status](https://dev.azure.com/kunaltawatia/WeVote/_apis/build/status/kunaltawatia.WeVote?branchName=master)](https://dev.azure.com/kunaltawatia/WeVote/_build/latest?definitionId=2&branchName=master)
-A Distributed Application for Electoral Voting and Polling, based on ethereum blockchain.
+A Distributed Application for Electoral Voting and Polling, based on ethereum blockchain.  
+[Distributed Platform](https://wevoteplatform.azurewebsites.net)
 ___
-## Deploy WeVote
+## Deploy WeVote on local machine
 * ### Install [Node.js](https://nodejs.org/en/download/current/)
 > Deploying this app requires node package manager `npm`
 * ### Clone the repository
