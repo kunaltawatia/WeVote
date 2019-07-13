@@ -27,11 +27,12 @@ steps:
     inlineScript: 'az storage blob upload-batch -d "\$web" --account-name "deploywebug" -s "$(Build.Repository.LocalPath)/build"'
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    rootFolderOrFile: '$(Build.Repository.LocalPath)/build'
     includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
