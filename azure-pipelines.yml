@@ -25,9 +25,17 @@ steps:
 #     azureSubscription: 'Free Trial(5caeab08-ef5c-4460-a247-2dd102b225f7)'
 #     scriptLocation: 'inlineScript'
 #     inlineScript: 'az storage blob upload-batch -d "\$web" --account-name "deploywebug" -s "$(Build.Repository.LocalPath)/build"'
+# - task: ArchiveFiles@2
+#   inputs:
+#     rootFolderOrFile: '$(Build.Repository.LocalPath)/build'
+#     archiveType: 'zip'
+#     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+#     replaceExistingArchive: true
+
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.Repository.LocalPath)'
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
