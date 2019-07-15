@@ -22,4 +22,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/bin
+# truffle
+
+/contracts
+/migrations
+/test
+truffle-config.js
