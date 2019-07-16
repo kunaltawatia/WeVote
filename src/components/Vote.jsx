@@ -163,6 +163,7 @@ export default class Vote extends React.Component {
               id="inputAddress"
               value={this.state.inputAddress}
               onChange={this._handleChange.bind(this)}
+              autoComplete="off"
             />
             <Button
               onClick={() => {

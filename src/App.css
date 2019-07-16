@@ -1,5 +1,5 @@
 .App {
-    margin: 10vh;
+    margin: 7vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,7 +54,7 @@ select {
 
 .input-root {
     border-radius: 50px;
-    box-shadow: 1px 1px 1px #888888;
+    box-shadow: 1.5px 1.5px 1.5px .5px #888888;
 }
 
 .question-input-root {

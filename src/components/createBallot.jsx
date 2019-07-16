@@ -29,7 +29,7 @@ export default class CreateBallot extends React.Component {
     this.state = {
       question: "Weather is nice today, isn't it?",
       optionCount: 2,
-      options: ["Yes", "No"],
+      options: ["Yes", "No"]
     };
     this._handleChange = this._handleChange.bind(this);
     this._handleClick = this._handleClick.bind(this);
@@ -215,6 +215,7 @@ export default class CreateBallot extends React.Component {
                 <div class="question-input-root">
                   <textarea
                     className="question-input"
+                    style={{ resize: "none" }}
                     id="question"
                     label="Question"
                     onChange={this._handleChange}
@@ -231,16 +232,18 @@ export default class CreateBallot extends React.Component {
                 return (
                   <Grid item>
                     <div class="input-root">
-                      <input
-                        className="option-input"
-                        id={index}
-                        label={"Choice"}
-                        onChange={this._handleOptionChange}
-                        value={this.state.options[index]}
-                        required
-                        autoComplete="off"
-                        placeholder="Option"
-                      />
+                      <Tooltip title="Edit">
+                        <input
+                          className="option-input"
+                          id={index}
+                          label={"Choice"}
+                          onChange={this._handleOptionChange}
+                          value={this.state.options[index]}
+                          required
+                          autoComplete="off"
+                          placeholder="Option"
+                        />
+                      </Tooltip>
                       <Tooltip title="Delete Option">
                         <IconButton
                           onClick={() => this._deleteOption(index)}
