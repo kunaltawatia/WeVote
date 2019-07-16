@@ -27,9 +27,9 @@ export default class CreateBallot extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      question: "Weather is nice today, isn't it?",
-      optionCount: 2,
-      options: ["Yes", "No"]
+      question: "Blockchain revolutionizes democracy forever.",
+      optionCount: 3,
+      options: ["Yes", "No", "Maybe"]
     };
     this._handleChange = this._handleChange.bind(this);
     this._handleClick = this._handleClick.bind(this);
@@ -225,6 +225,7 @@ export default class CreateBallot extends React.Component {
                     placeholder="Your Question ..."
                     autoComplete="off"
                     autoFocus
+                    spellcheck="false"
                   />
                 </div>
               </Grid>

@@ -20,8 +20,9 @@
 
 .question-input {
     width: 100%;
+    height: 15vh;
     font-size: 1rem;
-    font-family: 'Roboto';
+    font-family: 'Roboto Mono';
     border: 0;
     text-align: center;
     word-wrap: normal;
@@ -36,7 +37,7 @@ select {
 .option-input {
     margin-left: 2rem;
     font-size: 0.8rem;
-    font-family: 'Roboto';
+    font-family: 'Roboto Mono';
     border: 0;
     display: inline flex;
 }
@@ -58,6 +59,6 @@ select {
 }
 
 .question-input-root {
-    max-width: 100%;
+    width: 100%;
     padding: 10px;
 }
