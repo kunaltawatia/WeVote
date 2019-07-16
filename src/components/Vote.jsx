@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import ballot from "../contracts";
+import ballot from "../contracts/poll";
 import TextField from "@material-ui/core/TextField";
 import { Badge, CardHeader, Tooltip } from "@material-ui/core";
 const Web3 = require("web3");
@@ -52,7 +52,7 @@ export default class Vote extends React.Component {
   _update() {
     setTimeout(() => {
       if (this.props.contractAddress) {
-        Ballot = new web3.eth.Contract(ballot.ABI, this.props.contractAddress);
+        Ballot = new web3.eth.Contract(ballot.abi, this.props.contractAddress);
         Ballot.methods
           .regex()
           .call()

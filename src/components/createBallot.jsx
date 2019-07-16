@@ -13,7 +13,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import ballot from "../contracts";
+import ballot from "../contracts/poll";
 
 const Web3 = require("web3");
 var web3 = new Web3();
@@ -47,7 +47,7 @@ export default class CreateBallot extends React.Component {
         window.ethereum.enable().then(function() {
           // User has allowed account access to DApp...
           accountaddress = web3.givenProvider.selectedAddress;
-          ballotContract = new web3.eth.Contract(ballot.ABI);
+          ballotContract = new web3.eth.Contract(ballot.abi);
         });
       } catch (err) {
         // User has denied account access to DApp...
@@ -77,7 +77,7 @@ export default class CreateBallot extends React.Component {
     console.log(exp);
     ballotContract
       .deploy({
-        data: ballot.byteCode,
+        data: ballot.bytecode,
         arguments: [exp, que]
       })
       .send(
