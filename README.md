@@ -18,6 +18,14 @@ The registration portals lets users register them self for next election , If us
 The candidate comparator allows voters to check the profile of candidate of given state and constituency  . Thus it helps voters to effectively use their vote and cast their vote to correct candidate . The candidate comparator lets users judge a candidate on the basis of criteria like education, criminal records, social work done, awards and recognition, their career before politics, and property owned by them.
    
 ___
+#### Team 
+    - Kunal Tawatia
+    - Priyanshi Jain
+    - Venkatesh Kotwade
+    
+    WeBug 
+    Indian Institute of Technology, Jodhpur
+___
 ## Deploy on local machine
 * ### Install [Node.js](https://nodejs.org/en/download/current/)
 > Deploying this app requires node package manager `npm`
@@ -39,11 +47,3 @@ npm start
 ```
 npm run build
 ```
-___
-#### Team 
-    - Kunal Tawatia
-    - Priyanshi Jain
-    - Venkatesh Kotwade
-    
-    WeBug 
-    Indian Institute of Technology, Jodhpur
