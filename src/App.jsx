@@ -2,6 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import CreateBallot from "./components/createBallot";
+import NavBar from "./components/navbar";
+import Candidatelist from "./components/candidate_list";
+import Profile from "./components/profile";
 import Vote from "./components/Vote";
 
 export default class App extends React.Component {
@@ -20,6 +23,7 @@ export default class App extends React.Component {
     return (
       <div className="App">
         <Router>
+        
           <Route
             exact
             path="/"
@@ -39,6 +43,22 @@ export default class App extends React.Component {
               />
             )}
           />
+        
+          
+          <Route
+            exact
+            path="/profile"
+            render={() => (
+              <div>
+              <NavBar />
+              <Candidatelist />
+              </div>
+
+            )}
+          />
+          
+      <Route path="/profile/:id" render={(props) => <Profile {...props} />}/> 
+  
         </Router>
       </div>
     );

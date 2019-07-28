@@ -10,7 +10,7 @@ The voting application is a distributed application based on Azure blockchain . 
 
 #### REGISTRATION PORTAL :
 
-The registration portals lets users register them self for next election , If user is above 18 years and satisfy all conditions then verification is done by officials of election and user will be added to the voter list . If user is below 18 years but satisfy all other conditions then that user will be added to temporary list and whenever he turns 18 he will be added to the voter list ,  this ensures involvement of all citizens in election .
+The registration portal lets users register them self for next election , If user is above 18 years and satisfy all conditions then verification is done by officials of election and user will be added to the voter list . If user is below 18 years but satisfy all other conditions then that user will be added to temporary list and whenever he turns 18 he will be added to the voter list ,  this ensures involvement of all citizens in election .
 
 
 #### CANDIDATE COMPARATOR :
