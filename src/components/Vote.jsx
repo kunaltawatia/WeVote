@@ -21,7 +21,6 @@ export default class Vote extends React.Component {
       contractLoaded: false,
       result: [],
       voted: false,
-      inputAddress: '0xBAF82a009E36E6c2F837634889C98Fe47062f3e0'
     };
   }
   componentDidMount() {
@@ -58,7 +57,7 @@ export default class Vote extends React.Component {
     return (
       <Card style={{ borderRadius: 50 }} className="card">
         <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
-
+        <br />
         {!this.props.contractAddress && (
           <div>
             <TextField
@@ -92,11 +91,35 @@ class VotingComponent extends React.Component {
     }
   }
   componentDidMount() {
-    this._update.bind(this)();
+    if (window.ethereum) {
+      web3 = new Web3(window.ethereum);
+      try {
+        window.ethereum.enable().then(function () {
+          // User has allowed account access to DApp...
+          accountaddress = web3.givenProvider.selectedAddress;
+        });
+      } catch (err) {
+        // User has denied account access to DApp...
+        alert("You have denied access to MetaMask request. Reload the page. ");
+      }
+    }
+    // Legacy DApp Browsers
+    else if (window.web3) {
+      web3 = new Web3(window.web3.currentProvider);
+      web3.eth.sendTransaction({
+        /* ... */
+      });
+    }
+    // Non-DApp Browsers
+    else {
+      alert("You have to install MetaMask extension for your browser !");
+    }
+    setTimeout(() => {
+      this._update.bind(this)();
+    }, 200);
   }
   _update() {
     Ballot = new web3.eth.Contract(ballot.abi, this.props.contractAddress);
-
     Ballot.methods
       .regex()
       .call()
@@ -196,19 +219,20 @@ class VotingComponent extends React.Component {
         <CircularProgress />
       );
     }
-    var sum=0;
+    var sum = 0;
     return (
-      <div>
-        <Typography variant="h5" align="center" style={{ fontFamily: "Roboto Mono" }}>{this.state.question}</Typography>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <Typography variant="h6" align="center" style={{ fontFamily: "Roboto Mono",margin:20 }}>{this.props.contractAddress}<br/>{this.state.question}</Typography>
         <Grid style={{
           boxShadow: "0.5px 1.5px 1.5px 1.5px #888888",
           borderRadius: 50,
           padding: "50px 0px 50px 0px",
           margin: 20,
           backgroundColor: '#f5d3d0',
+          // minWidth:"45%"
         }}>
           {this.state.options.map((option, index) => {
-            sum = sum+parseInt(this.state.result[index]);
+            sum = sum + parseInt(this.state.result[index]);
             return (
               <div style={{
                 display: 'flex',
@@ -243,14 +267,14 @@ class VotingComponent extends React.Component {
                     width: 120
                   }}
                 >
-                {this.state.voted?this.state.result[index]+" Vote":''}
+                  {this.state.voted ? this.state.result[index] + " Vote" : ''}
                 </Button>
                 {/* </div> */}
               </div>
             );
           })}
         </Grid>
-        {this.state.voted && <Typography style={{fontWeight:'bold'}}>{sum} VOTES CASTED</Typography>}
+        {this.state.voted && <Typography style={{ fontWeight: 'bold' }}>{sum} VOTES CASTED</Typography>}
       </div>
     );
   }
