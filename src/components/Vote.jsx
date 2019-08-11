@@ -4,7 +4,8 @@ import Card from "@material-ui/core/Card";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ballot from "../contracts/poll";
 import TextField from "@material-ui/core/TextField";
-import { Badge, CardHeader, Tooltip } from "@material-ui/core";
+import { Badge, CardHeader, Tooltip, Typography, Grid } from "@material-ui/core";
+import VolumeUpIcon from "@material-ui/icons/VolumeUp"
 const Web3 = require("web3");
 var web3 = new Web3();
 var accountaddress;
@@ -55,7 +56,7 @@ export default class Vote extends React.Component {
   }
   render() {
     return (
-      <Card className="card">
+      <Card style={{ borderRadius: 50 }} className="card">
         <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
 
         {!this.props.contractAddress && (
@@ -76,7 +77,7 @@ export default class Vote extends React.Component {
           </div>
         )}
 
-        {this.props.contractAddress && <VotingComponent thisState = {this.state} {...this.props}/>}
+        {this.props.contractAddress && <VotingComponent {...this.props} />}
 
       </Card>
     );
@@ -84,79 +85,79 @@ export default class Vote extends React.Component {
 }
 
 class VotingComponent extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state=this.props.thisState;
+    this.state = {
+      result: []
+    }
   }
-  componentDidMount(){
-    this._update.bind(this)();    
+  componentDidMount() {
+    this._update.bind(this)();
   }
   _update() {
-    setTimeout(() => {
-      if (this.props.contractAddress) {
-        Ballot = new web3.eth.Contract(ballot.abi, this.props.contractAddress);
+    Ballot = new web3.eth.Contract(ballot.abi, this.props.contractAddress);
+
+    Ballot.methods
+      .regex()
+      .call()
+      .then(result => {
+        this.setState({
+          regex: result,
+          options: result.split("_=_").filter((el, ind) => ind !== 0),
+          question: result.split("_=_")[0]
+        });
+      })
+      .then(() => {
         Ballot.methods
-          .regex()
+          .options()
           .call()
           .then(result => {
-            this.setState({
-              regex: result,
-              options: result.split("_=_").filter((el, ind) => ind !== 0),
-              question: result.split("_=_")[0]
-            });
-          })
-          .then(() => {
-            Ballot.methods
-              .options()
-              .call()
-              .then(result => {
-                this.setState({ optionCount: result });
-                if (this.state.optionCount != this.state.options.length)
-                  alert("BLOCK IS INFECTED");
-              });
-          })
-          .then(() => {
-            this.state.options.map((option, index) => {
-              Ballot.methods
-                .result(index + 1)
-                .call()
-                .then(res => {
-                  this.setState({
-                    result: [...this.state.result, res]
-                  });
-                });
-            });
-            Ballot.methods
-              .voted(web3.givenProvider.selectedAddress)
-              .call()
-              .then(res => {
-                this.setState({
-                  voted: res
-                });
-              });
-          })
-          .then(() => {
-            this.setState({ contractLoaded: true });
+            this.setState({ optionCount: result });
+            if (this.state.optionCount != this.state.options.length)
+              alert("BLOCK IS INFECTED");
           });
-
-        Ballot.events
-          .addVote({}, (error, event) => { })
-          .on("data", event => {
-            this.setState({
-              result: this.state.result.map((res, index) => {
-                if (index + 1 == event.returnValues._choice)
-                  return parseInt(res) + 1;
-                return res;
-              })
+      })
+      .then(() => {
+        this.state.options.map((option, index) => {
+          Ballot.methods
+            .result(index + 1)
+            .call()
+            .then(res => {
+              this.setState({
+                result: [...this.state.result, res]
+              });
             });
+        });
+        Ballot.methods
+          .voted(web3.givenProvider.selectedAddress)
+          .call()
+          .then(res => {
+            this.setState({
+              voted: res
+            });
+          });
+      })
+      .then(() => {
+        this.setState({ contractLoaded: true });
+      });
+
+    Ballot.events
+      .addVote({}, (error, event) => { })
+      .on("data", event => {
+        this.setState({
+          result: this.state.result.map((res, index) => {
+            if (index + 1 == event.returnValues._choice)
+              return parseInt(res) + 1;
+            return res;
           })
-          .on("changed", event => {
-            // remove event from local database
-          })
-          .on("error", console.error);
-      }
-    }, 200);
+        });
+      })
+      .on("changed", event => {
+        // remove event from local database
+      })
+      .on("error", console.error);
   }
+
   doVote(option) {
     accountaddress = web3.givenProvider.selectedAddress;
     var mygas;
@@ -188,34 +189,68 @@ class VotingComponent extends React.Component {
         this._update();
       });
   }
+
   render() {
-    console.log(this.state);
+    if (!this.state.contractLoaded) {
+      return (
+        <CircularProgress />
+      );
+    }
+    var sum=0;
     return (
       <div>
-        <Card className="card">
-          <CardHeader
-            title={this.state.question}
-            style={{ margin: "1rem" }}
-          />
+        <Typography variant="h5" align="center" style={{ fontFamily: "Roboto Mono" }}>{this.state.question}</Typography>
+        <Grid style={{
+          boxShadow: "0.5px 1.5px 1.5px 1.5px #888888",
+          borderRadius: 50,
+          padding: "50px 0px 50px 0px",
+          margin: 20,
+          backgroundColor: '#f5d3d0',
+        }}>
           {this.state.options.map((option, index) => {
+            sum = sum+parseInt(this.state.result[index]);
             return (
-              <Tooltip title={this.state.voted ? "Already Voted" : "Vote"}>
-                <Badge
-                  color="secondary"
-                  showZero
-                  badgeContent={this.state.result[index]}
-                >
-                  <Button
-                    onClick={() => this.doVote(index + 1)}
-                    disabled={this.state.voted}
-                  >
+              <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                margin: "10px 10px 10px 0px"
+              }}>
+                <div style={{
+                  display: 'flex',
+                  borderRadius: "0px 50px 50px 0px",
+                  boxShadow: "1.5px 1.5px 1.5px .5px #888888",
+                  padding: 5,
+                  backgroundColor: 'white',
+                  width: "80%",
+                  justifyContent: 'flex-start'
+                }}>
+                  <Typography variant="body1" style={{ fontFamily: 'Roboto Mono', marginLeft: 20, verticalAlign: 'middle', lineHeight: 3.5, fontWeight: 'bold' }}>
+                    <VolumeUpIcon style={{ verticalAlign: 'middle', marginLeft: 10, marginRight: 10 }} />
                     {option}
-                  </Button>
-                </Badge>
-              </Tooltip>
+                  </Typography>
+                </div>
+                <Button
+                  onClick={() => this.doVote(index + 1)}
+                  disabled={this.state.voted ? true : false}
+                  color="primary"
+                  variant="contained"
+                  style={{
+                    borderRadius: 50,
+                    border: 'solid',
+                    margin: "8px 20px 8px 20px",
+                    borderStyle: 'inset',
+                    width: 120
+                  }}
+                >
+                {this.state.voted?this.state.result[index]+" Vote":''}
+                </Button>
+                {/* </div> */}
+              </div>
             );
           })}
-        </Card>
+        </Grid>
+        {this.state.voted && <Typography style={{fontWeight:'bold'}}>{sum} VOTES CASTED</Typography>}
       </div>
     );
   }
