@@ -19,7 +19,8 @@ export default class Vote extends React.Component {
       options: [],
       contractLoaded: false,
       result: [],
-      voted: false
+      voted: false,
+      inputAddress: '0xBAF82a009E36E6c2F837634889C98Fe47062f3e0'
     };
   }
   componentDidMount() {
@@ -27,7 +28,7 @@ export default class Vote extends React.Component {
     if (window.ethereum) {
       web3 = new Web3(window.ethereum);
       try {
-        window.ethereum.enable().then(function() {
+        window.ethereum.enable().then(function () {
           // User has allowed account access to DApp...
           accountaddress = web3.givenProvider.selectedAddress;
         });
@@ -47,7 +48,48 @@ export default class Vote extends React.Component {
     else {
       alert("You have to install MetaMask extension for your browser !");
     }
-    this._update.bind(this)();
+  }
+
+  _handleChange(event) {
+    this.setState({ [event.target.id]: event.target.value });
+  }
+  render() {
+    return (
+      <Card className="card">
+        <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
+
+        {!this.props.contractAddress && (
+          <div>
+            <TextField
+              id="inputAddress"
+              value={this.state.inputAddress}
+              onChange={this._handleChange.bind(this)}
+              autoComplete="off"
+            />
+            <Button
+              onClick={() => {
+                this.props._handleContractAddress(this.state.inputAddress);
+              }}
+            >
+              Load
+            </Button>
+          </div>
+        )}
+
+        {this.props.contractAddress && <VotingComponent thisState = {this.state} {...this.props}/>}
+
+      </Card>
+    );
+  }
+}
+
+class VotingComponent extends React.Component {
+  constructor(props){
+    super(props);
+    this.state=this.props.thisState;
+  }
+  componentDidMount(){
+    this._update.bind(this)();    
   }
   _update() {
     setTimeout(() => {
@@ -98,7 +140,7 @@ export default class Vote extends React.Component {
           });
 
         Ballot.events
-          .addVote({}, (error, event) => {})
+          .addVote({}, (error, event) => { })
           .on("data", event => {
             this.setState({
               result: this.state.result.map((res, index) => {
@@ -121,7 +163,7 @@ export default class Vote extends React.Component {
     Ballot.methods
       .vote(option)
       .estimateGas({ from: accountaddress })
-      .then(function(gasAmount) {
+      .then(function (gasAmount) {
         mygas = gasAmount;
       });
     Ballot.methods
@@ -146,64 +188,35 @@ export default class Vote extends React.Component {
         this._update();
       });
   }
-  _handleChange(event) {
-    this.setState({ [event.target.id]: event.target.value });
-  }
   render() {
+    console.log(this.state);
     return (
-      <Card className="card">
-        <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
-        <br />
-        {this.props.contractAddress && this.state.contractLoaded === false && (
-          <CircularProgress />
-        )}
-        {!this.props.contractAddress && (
-          <div>
-            <TextField
-              id="inputAddress"
-              value={this.state.inputAddress}
-              onChange={this._handleChange.bind(this)}
-              autoComplete="off"
-            />
-            <Button
-              onClick={() => {
-                this.props._handleContractAddress(this.state.inputAddress);
-                this._update.bind(this)();
-              }}
-            >
-              Load
-            </Button>
-          </div>
-        )}
-        {this.state.regex && (
-          <div>
-            <Card className="card">
-              <CardHeader
-                title={this.state.question}
-                style={{ margin: "1rem" }}
-              />
-              {this.state.options.map((option, index) => {
-                return (
-                  <Tooltip title={this.state.voted ? "Already Voted" : "Vote"}>
-                    <Badge
-                      color="secondary"
-                      showZero
-                      badgeContent={this.state.result[index]}
-                    >
-                      <Button
-                        onClick={() => this.doVote(index + 1)}
-                        disabled={this.state.voted}
-                      >
-                        {option}
-                      </Button>
-                    </Badge>
-                  </Tooltip>
-                );
-              })}
-            </Card>
-          </div>
-        )}
-      </Card>
+      <div>
+        <Card className="card">
+          <CardHeader
+            title={this.state.question}
+            style={{ margin: "1rem" }}
+          />
+          {this.state.options.map((option, index) => {
+            return (
+              <Tooltip title={this.state.voted ? "Already Voted" : "Vote"}>
+                <Badge
+                  color="secondary"
+                  showZero
+                  badgeContent={this.state.result[index]}
+                >
+                  <Button
+                    onClick={() => this.doVote(index + 1)}
+                    disabled={this.state.voted}
+                  >
+                    {option}
+                  </Button>
+                </Badge>
+              </Tooltip>
+            );
+          })}
+        </Card>
+      </div>
     );
   }
 }
