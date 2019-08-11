@@ -24,6 +24,6 @@ yarn-error.log*
 
 # truffle
 
-/migrations
+# /migrations
 /test
-truffle-config.js
+# truffle-config.js
