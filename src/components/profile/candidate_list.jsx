@@ -16,7 +16,7 @@ class candidate_list extends Component {
     state = {
         candidate: [],
         searchString: '',
-        compare1: ' '
+        compare: []
     }
     constructor() {
         super()
