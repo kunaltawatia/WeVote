@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Grid from '@material-ui/core/Grid';
 import * as contentful from 'contentful'
 import Display from '../components/profiledisplay'
 import NavBar from '../components/navbar'

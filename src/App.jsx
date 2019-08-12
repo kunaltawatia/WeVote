@@ -5,6 +5,7 @@ import CreateBallot from "./components/createBallot";
 import NavBar from "./components/navbar";
 import Candidatelist from "./components/candidate_list";
 import Profile from "./components/profile";
+import Registration from "./components/registration";
 import Vote from "./components/Vote";
 
 export default class App extends React.Component {
@@ -40,6 +41,14 @@ export default class App extends React.Component {
               <Vote
                 contractAddress={this.state.contractAddress}
                 _handleContractAddress={this._changeContractAddress.bind(this)}
+              />
+            )}
+          />
+
+            <Route
+            path="/registration"
+            render={() => (
+              < Registration
               />
             )}
           />

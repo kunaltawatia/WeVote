@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 function navbar() {
     return (
       <div >
-         <Appbar position="static" style ={{ backgroundColor: '#000033'}}>
+         <Appbar  style ={{position: "absolute", backgroundColor: '#000033',width:'100%'}}>
            <Toolbar >
              <Typography style ={{ color: 'white'}}>
                Candidate Comparator
