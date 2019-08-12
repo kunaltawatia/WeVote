@@ -15,7 +15,7 @@ const Candidate = (props) => {
             { props.candidatee ? (
               
                 <Card >
-                <CardMedia style={{height: 0, paddingTop: '56.25%'}}
+                <CardMedia style={{height: 0, paddingTop: '60.25%'}}
                image={props.candidatee.fields.profilePhoto.fields.file.url}
                title={props.candidatee.fields.title}
                />
@@ -32,6 +32,13 @@ const Candidate = (props) => {
                     check profile
                     </Link>
                 </Button>
+                <Button size="small" color="primary" >
+                  add to compare
+                </Button>
+                <Button size="small" color="primary" >
+                  Remove from comparison
+                </Button>
+
 
                 </CardActions> 
             </Card>

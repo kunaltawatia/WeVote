@@ -2,10 +2,10 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import CreateBallot from "./components/createBallot";
-import NavBar from "./components/navbar";
-import Candidatelist from "./components/candidate_list";
-import Profile from "./components/profile";
-import Registration from "./components/registration";
+import NavBar from "./components/profile/navbar";
+import Candidatelist from "./components/profile/candidate_list";
+import Profile from "./components/profile/profile";
+import Registration from "./components/registration/registration";
 import Vote from "./components/Vote";
 
 export default class App extends React.Component {
