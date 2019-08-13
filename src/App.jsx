@@ -6,6 +6,7 @@ import NavBar from "./components/profile/navbar";
 import Candidatelist from "./components/profile/candidate_list";
 import Profile from "./components/profile/profile";
 import Registration from "./components/registration/registration";
+import CreateDB from "./components/createDB/createDB";
 import Vote from "./components/Vote";
 
 export default class App extends React.Component {
@@ -15,16 +16,15 @@ export default class App extends React.Component {
       contractAddress: undefined
     };
   }
-  _changeContractAddress(_address) {
-    this.setState({
-      contractAddress: _address
-    });
+  _changeContractAddress(newState) {
+    this.setState(newState);
+    console.log(this.state, newState);
   }
   render() {
     return (
       <div className="App">
         <Router>
-        
+
           <Route
             exact
             path="/"
@@ -40,34 +40,42 @@ export default class App extends React.Component {
             render={() => (
               <Vote
                 contractAddress={this.state.contractAddress}
+                votingContractType={this.state.votingContractType}
                 _handleContractAddress={this._changeContractAddress.bind(this)}
               />
             )}
           />
 
-            <Route
+          <Route
             path="/registration"
             render={() => (
-              < Registration
-              />
+              <Registration dbContractAddress={this.state.dbContractAddress}
+                _handleContractAddress={this._changeContractAddress.bind(this)}/>
             )}
           />
-        
-          
+
+          <Route
+            path="/createDatabase"
+            render={() => (
+              <CreateDB />
+            )}
+          />
+
+
           <Route
             exact
             path="/profile"
             render={() => (
               <div>
-              <NavBar />
-              <Candidatelist />
+                <NavBar />
+                <Candidatelist />
               </div>
 
             )}
           />
-          
-      <Route path="/profile/:id" render={(props) => <Profile {...props} />}/> 
-  
+
+          <Route path="/profile/:id" render={(props) => <Profile {...props} />} />
+
         </Router>
       </div>
     );

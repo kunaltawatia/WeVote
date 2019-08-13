@@ -56,6 +56,8 @@ select {
 .input-root {
     border-radius: 50px;
     box-shadow: 1.5px 1.5px 1.5px .5px #888888;
+    display: flex;
+    justify-content: space-between;
 }
 
 .question-input-root {
