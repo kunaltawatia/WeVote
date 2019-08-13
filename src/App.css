@@ -58,9 +58,14 @@ select {
     box-shadow: 1.5px 1.5px 1.5px .5px #888888;
     display: flex;
     justify-content: space-between;
+    background-color: white;
 }
 
 .question-input-root {
     width: 100%;
-    padding: 10px;
+    padding: 20px;
+    background: white;
+    border-radius: 30px;
+    margin-left: -20px;
+    box-shadow: 1.5px 1.5px 1.5px 0.5px #888888;
 }

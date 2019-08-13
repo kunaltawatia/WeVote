@@ -227,6 +227,8 @@ export default class CreateBallot extends React.Component {
                     variant="contained"
                     onClick={() => {
                       this.setState({ loading: 0 });
+                      contractAddress = undefined;
+                      transactionHash = undefined;
                     }}
                   >
                     New Contract
@@ -240,13 +242,13 @@ export default class CreateBallot extends React.Component {
   }
 
   render() {
-    if(this.state.redirect){
-      return(
+    if (this.state.redirect) {
+      return (
         <Redirect to="/createDatabase" />
       )
     }
     return (
-      <Card className="card">
+      <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.6)', maxWidth: '60vw' }} className="card">
         <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
         {this.state.loading && !this.state.contractLoaded ? (
           this.ballotCard()
@@ -320,7 +322,7 @@ export default class CreateBallot extends React.Component {
                         </Fab>
                       </Tooltip>
                     </Grid>
-                    <Grid item xs={8} style={{ textAlign: 'left' }}>
+                    <Grid item xs={12} style={{ display: 'flex', justifyContent: 'space-between' }}>
                       {this.state.addVoterAuthentication ?
                         <div class="input-root">
                           <Tooltip title="Add publicDB contract address">
@@ -337,7 +339,7 @@ export default class CreateBallot extends React.Component {
                               <IconButton
                                 color="primary"
                                 onClick={() => {
-                                  this.setState({redirect:true})
+                                  this.setState({ redirect: true })
                                 }}
                               >
                                 <AddIcon />
@@ -355,27 +357,24 @@ export default class CreateBallot extends React.Component {
                         </div>
                         :
                         <Button
-                          color="primary"
+                          color="secondary"
                           variant="contained"
                           onClick={(e) => {
                             e.preventDefault();
                             this.setState({ addVoterAuthentication: true })
                           }}
                         >
-                          Voter Authentication
+                          Authorised Voters Only
                     </Button>
                       }
-
-                    </Grid>
-                    <Grid item xs={4} className="submit">
                       <Button
                         color="primary"
                         variant="contained"
                         type="submit"
                         disabled={this.state.loading ? true : false}
                       >
-                        Create Poll
-                    </Button>
+                        {this.state.addVoterAuthentication == false ? 'Create Public Poll' : 'Create Private Poll'}
+                      </Button>
                     </Grid>
                   </Grid>
                 </div>

@@ -1,12 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ballot from "../contractsJSON/publicPoll";
 import authenticatedBallot from "../contractsJSON/authenticatedPoll";
 import TextField from "@material-ui/core/TextField";
-import { Tooltip, Typography, Grid, Select } from "@material-ui/core";
+import { Tooltip, Typography, Grid, Select, MenuItem, Menu } from "@material-ui/core";
 import VolumeUpIcon from "@material-ui/icons/VolumeUp"
 const Web3 = require("web3");
 var web3 = new Web3();
@@ -58,7 +58,7 @@ export default class Vote extends React.Component {
   }
   render() {
     return (
-      <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.6)', maxWidth: '60vw' }} className="card">
+      <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.6)', maxWidth: '60vw', padding: 50 }} className="card">
         <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
         <br />
         {!this.props.contractAddress && (
@@ -67,27 +67,38 @@ export default class Vote extends React.Component {
             this.props._handleContractAddress({ "contractAddress": this.state.inputAddress, "votingContractType": this.state.votingContractType });
           }}>
             <TextField
+              style={{
+                margin: 20,
+                padding: 20,
+                width: '80%',
+              }}
               id="inputAddress"
               value={this.state.inputAddress}
               onChange={this._handleChange.bind(this)}
               autoComplete="off"
+              placeholder='Database Contract Address'
             />
-            <Select
-              native
-              value={this.state.votingContractType}
-              onChange={this._handleChange.bind(this)}
-              inputProps={{
-                id: 'votingContractType',
-              }}
-            >
-              <option value="unauthenticated">Unauthenticated Voting</option>
-              <option value="authenticated">Authenticated Voting</option>
-            </Select>
-            <Button
-              type="submit"
-            >
-              Load
+            <br />
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Select
+                native
+                value={this.state.votingContractType}
+                onChange={this._handleChange.bind(this)}
+                inputProps={{
+                  id: 'votingContractType',
+                }}
+              >
+                <option value="unauthenticated">Unauthenticated Voting</option>
+                <option value="authenticated">Authenticated Voting</option>
+              </Select>
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+              >
+                Load Voting Ballot
             </Button>
+            </div>
           </form>
         )}
 
@@ -198,6 +209,15 @@ class VotingComponent extends React.Component {
                 })
               }
             });
+          Ballot.methods
+            .dbAddr()
+            .call()
+            .then(res => {
+              console.log(res, 'dbAddr');
+              this.setState({
+                dbAddr: res
+              })
+            });
         }
       })
       .then(() => {
@@ -264,6 +284,11 @@ class VotingComponent extends React.Component {
       return (
         <CircularProgress />
       );
+    }
+    if (this.state.redirect) {
+      return (
+        <Redirect to='/registration' />
+      )
     }
     var sum = 0;
     return (
@@ -334,12 +359,8 @@ class VotingComponent extends React.Component {
           })}
         </Grid>
         {this.state.voted != 0 && <Typography style={{ fontWeight: 'bold' }}>{sum} VOTES CASTED</Typography>}
-        {this.state.notRegistered ? <Link to={{
-          pathname: '/registration',
-          state: {
-            publicDBAddress: 0x0000
-          }
-        }}>Register Yourself First.</Link> : <div />}
+        {this.state.notRegistered ? <Button onClick={() => { this.props._handleContractAddress({ dbContractAddress: this.state.dbAddr }); this.setState({ redirect: true }) }}>Register To Vote</Button> : <div />
+        }
       </div>
     );
   }

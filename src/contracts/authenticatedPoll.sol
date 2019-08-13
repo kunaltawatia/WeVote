@@ -5,7 +5,7 @@ contract publicDB{
 contract authenticatedPoll {
     string public regex;
     uint8 public options;
-    address dbAddr;
+    address public dbAddr;
     publicDB db;
     mapping(uint8=>uint8) public result;
     mapping(address=>uint8) public voted;

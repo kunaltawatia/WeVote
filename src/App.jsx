@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import CreateBallot from "./components/createBallot";
-import NavBar from "./components/profile/navbar";
+import NavBar from "./components/navbar";
 import Candidatelist from "./components/profile/candidate_list";
 import Profile from "./components/profile/profile";
 import Registration from "./components/registration/registration";
@@ -23,60 +23,67 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Router>
+        <NavBar />
+        <div style={{
+          // marginTop:'10vh'
+        }}>
 
-          <Route
-            exact
-            path="/"
-            // component={hello}
-            render={() => (
-              <CreateBallot
-                _handleContractAddress={this._changeContractAddress.bind(this)}
-              />
-            )}
-          />
-          <Route
-            path="/vote"
-            render={() => (
-              <Vote
-                contractAddress={this.state.contractAddress}
-                votingContractType={this.state.votingContractType}
-                _handleContractAddress={this._changeContractAddress.bind(this)}
-              />
-            )}
-          />
+          <Router>
+            <Route
+              exact
+              path="/"
+              // component={hello}
+              render={() => (
+                <CreateBallot
+                  _handleContractAddress={this._changeContractAddress.bind(this)}
+                />
+              )}
+            />
+            <Route
+              path="/vote"
+              render={() => (
+                <Vote
+                  contractAddress={this.state.contractAddress}
+                  votingContractType={this.state.votingContractType}
+                  _handleContractAddress={this._changeContractAddress.bind(this)}
+                />
+              )}
+            />
 
-          <Route
-            path="/registration"
-            render={() => (
-              <Registration dbContractAddress={this.state.dbContractAddress}
-                _handleContractAddress={this._changeContractAddress.bind(this)}/>
-            )}
-          />
+            <Route
+              path="/registration"
+              render={() => (
+                <Registration dbContractAddress={this.state.dbContractAddress}
+                  _handleContractAddress={this._changeContractAddress.bind(this)} />
+              )}
+            />
 
-          <Route
-            path="/createDatabase"
-            render={() => (
-              <CreateDB />
-            )}
-          />
+            <Route
+              path="/createDatabase"
+              render={() => (
+                <CreateDB
+                  _handleContractAddress={this._changeContractAddress.bind(this)}
+                />
+              )}
+            />
 
 
-          <Route
-            exact
-            path="/profile"
-            render={() => (
-              <div>
-                <NavBar />
-                <Candidatelist />
-              </div>
+            <Route
+              exact
+              path="/profile"
+              render={() => (
+                <div>
+                  <NavBar />
+                  <Candidatelist />
+                </div>
 
-            )}
-          />
+              )}
+            />
 
-          <Route path="/profile/:id" render={(props) => <Profile {...props} />} />
+            <Route path="/profile/:id" render={(props) => <Profile {...props} />} />
 
-        </Router>
+          </Router>
+        </div>
       </div>
     );
   }

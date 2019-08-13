@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link,Redirect } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -60,16 +60,27 @@ export default class Vote extends React.Component {
             this.props._handleContractAddress({ "dbContractAddress": this.state.inputAddress });
           }}>
             <TextField
+              style={{
+                margin: 20,
+                padding: 20,
+                width: '80%',
+              }}
               id="inputAddress"
               value={this.state.inputAddress}
               onChange={this._handleChange.bind(this)}
               autoComplete="off"
+              placeholder='Database Contract Address'
             />
-            <Button
-              type="submit"
-            >
-              Load Database Contract
+            <br />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+              >
+                Load Database Contract
             </Button>
+            </div>
           </form>
         )}
 
@@ -90,10 +101,6 @@ class VotingComponent extends React.Component {
     }
   }
   componentDidMount() {
-    db = new web3.eth.Contract(publicDB.abi, this.props.dbContractAddress);
-    setTimeout(() => {
-      this._update.bind(this)();
-    }, 500);
     if (window.ethereum) {
       web3 = new Web3(window.ethereum);
       try {
@@ -117,8 +124,13 @@ class VotingComponent extends React.Component {
     else {
       alert("You have to install MetaMask extension for your browser !");
     }
+
+    setTimeout(() => {
+      this._update.bind(this)();
+    }, 500);
   }
   _update() {
+    db = new web3.eth.Contract(publicDB.abi, this.props.dbContractAddress);
     this.setState({ contractLoaded: false })
     db.methods
       .getDetails(web3.givenProvider.selectedAddress)
@@ -159,8 +171,9 @@ class VotingComponent extends React.Component {
         console.log(confirmationNumber, receipt);
       })
       .on("error", error => alert(error.message))
-      .then(()=>{
+      .then(() => {
         this._update.bind(this)();
+        this.setState({ redirect: true });
       })
   }
 
@@ -172,6 +185,9 @@ class VotingComponent extends React.Component {
       return (
         <CircularProgress />
       );
+    }
+    if (this.state.redirect) {
+      return <Redirect to="/vote" />
     }
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'column' }}>
