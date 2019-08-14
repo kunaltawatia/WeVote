@@ -194,10 +194,10 @@ export default class CreateBallot extends React.Component {
                                 spacing={2}
                             >
                                 <Grid item>
-                                    <div class="question-input-root">
+                                    <div style={{borderRadius:10,padding:"2px 10px 2px 10px"}} class="question-input-root">
                                         <textarea
+                                            style={{ resize: "none"}}
                                             className="title-input"
-                                            style={{ resize: "none" }}
                                             id="petitionTitle"
                                             label="Petition Title"
                                             onChange={this._handleChange}

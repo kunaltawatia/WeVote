@@ -36,9 +36,9 @@ select {
 
 .title-input {
     width: 100%;
-    height: 1.5rem;
-    font-size: 1.1rem;
-    font-family: 'Roboto Mono';
+    height: 2.5rem;
+    font-size: 1.8rem;
+    font-family: 'DM Serif Text';
     border: 0;
     text-align: center;
     word-wrap: normal;
@@ -53,7 +53,7 @@ select {
 
 .body-input {
     width: 50vw;
-    height: 55vh;
+    height: 40vh;
     font-size: 1rem;
     font-family: 'Roboto Mono';
     border: 0;
@@ -101,4 +101,19 @@ select {
     border-radius: 30px;
     margin-left: -20px;
     box-shadow: 1.5px 1.5px 1.5px 0.5px #888888;
+}
+
+.typed {
+    padding: 20px;
+    /* background-color: rgb(109, 123, 214, 0.6); */
+    /* background-color: white; */
+    background-color: rgb(255,255,255,0.9); 
+    border-radius: 10px;
+    text-align: center;
+    font-family: 'Righteous', cursive;
+    font-size: 2rem
+}
+
+.type {
+    color: rgb(228, 64, 64)
 }

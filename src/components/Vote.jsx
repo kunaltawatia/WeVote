@@ -310,7 +310,7 @@ class VotingComponent extends React.Component {
     var sum = 0;
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'column' }}>
-        <Typography variant="h6" align="center" style={{ fontFamily: "Roboto Mono", margin: 20 }}>{this.props.contractAddress}<br />{this.state.question}</Typography>
+        <Typography variant="h6" align="center" style={{ fontFamily: "Roboto Mono", margin: 20 }}>{this.state.question}</Typography>
         <Grid style={{
           boxShadow: "0.5px 1.5px 1.5px 1.5px #888888",
           borderRadius: 50,
@@ -377,7 +377,7 @@ class VotingComponent extends React.Component {
         </Grid>
         {this.state.notRegistered ? <Button style={{borderRadius:50,margin:10}} onClick={() => { this.props._handleContractAddress({ dbContractAddress: this.state.dbAddr }); this.setState({ redirect: true }) }} variant="contained" color="secondary">Register To Vote</Button> : <div />}
         <Card style={{ borderRadius: 50 }} className="card">
-          <Typography style={{ fontWeight: 'bold' }}>{sum} VOTES CASTED</Typography>
+          <Typography style={{ fontWeight: 'bold' }}>{this.props.contractAddress}<br />{sum} VOTES CASTED</Typography>
           {this.state.votersVoted && <div>
             {this.state.votersVoted.map((voter) => {
               return (
@@ -561,7 +561,7 @@ class PetitionComponent extends React.Component {
     }
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'column' }}>
-        <Typography variant="h6" align="center" style={{ fontFamily: "Roboto Mono", margin: 20, fontWeight: 'bold' }}>{this.props.contractAddress}<br />{this.state.title}</Typography>
+        <Typography variant="h6" align="center" style={{ fontFamily: "Roboto Mono", margin: 20, fontWeight: 'bold' }}>{this.state.title}</Typography>
         <Typography variant="body1" align="center" style={{ fontFamily: "Roboto Mono", margin: 20 }}>{this.state.body}</Typography>
         <Button style={{borderRadius:50,margin:10}} 
           onClick={() => { this.doVote(1) }}
@@ -572,7 +572,7 @@ class PetitionComponent extends React.Component {
           Sign Petition
         </Button>
         <Card style={{ borderRadius: 50 }} className="card">
-          <Typography style={{ fontWeight: 'bold', margin: 20 }}>{this.state.result} SIGNED THIS PETITION</Typography>
+          <Typography style={{ fontWeight: 'bold', margin: 20 }}>{this.props.contractAddress}<br />{this.state.result} SIGNED THIS PETITION</Typography>
           {this.state.votersVoted && <div>
             {this.state.votersVoted.map((voter) => {
               return (

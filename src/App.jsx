@@ -9,7 +9,7 @@ import Registration from "./components/registration/registration";
 import CreateDB from "./components/createDB/createDB";
 import Vote from "./components/Vote";
 import BuildPetition from "./components/buildPetition";
-
+import Home from "./components/Home";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +33,12 @@ export default class App extends React.Component {
             <Route
               exact
               path="/"
-              // component={hello}
+              render={() => (
+                <Home />
+              )}
+            />
+            <Route
+              path="/createPoll"
               render={() => (
                 <CreateBallot
                   _handleContractAddress={this._changeContractAddress.bind(this)}
@@ -43,7 +48,6 @@ export default class App extends React.Component {
             <Route
               exact
               path="/buildPetition"
-              // component={hello}
               render={() => (
                 <BuildPetition
                   _handleContractAddress={this._changeContractAddress.bind(this)}
@@ -60,7 +64,6 @@ export default class App extends React.Component {
                 />
               )}
             />
-
             <Route
               path="/registration"
               render={() => (

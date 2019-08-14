@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button, List, ListItem, Divider, SwipeableDrawer, ListItemText, Fab } from '@material-ui/core';
 import MenuIcon from "@material-ui/icons/Menu";
 
@@ -16,29 +17,40 @@ export default class Navbar extends React.Component {
     }
     this.setState({ [side]: open });
   };
-
+  _handleClick(e) {
+    e.preventDefault();
+    console.log(e.target.id, this.props.history);
+  };
   sideList = side => (
     <div
       role="presentation"
       onClick={this.toggleDrawer(side, false)}
       onKeyDown={this.toggleDrawer(side, false)}
     >
-      <div style={{ width: '15vw' }}>
-        <List style={{margin:20}}>
-          <ListItem button >
-            <ListItemText primary='Home' />
+      <div style={{ width: '15vw' }} >
+        <img style={{ width: "100%" }} src="./img/logoBig.jpg" alt="Logo" />
+        <List style={{ margin: 20 }}>
+          <ListItem id="home">
+            <a href="./" style={{ textDecoration: 'none', color: 'black' }}>
+              <ListItemText primary='Home' />
+            </a>
           </ListItem>
-          <ListItem button >
-            <ListItemText primary='Create Poll' />
+          <ListItem>
+            <a href="./createpoll" style={{ textDecoration: 'none', color: 'black' }}>
+              <ListItemText primary='Create Poll' />
+            </a>
           </ListItem>
-          <ListItem button >
+          <ListItem><a href="./buildpetition" style={{ textDecoration: 'none', color: 'black' }}>
             <ListItemText primary='Build Petition' />
+          </a>
           </ListItem>
-          <ListItem button >
+          <ListItem><a href="./createdatabase" style={{ textDecoration: 'none', color: 'black' }}>
             <ListItemText primary='Create Database' />
+          </a>
           </ListItem>
-          <ListItem button >
+          <ListItem><a href="./vote" style={{ textDecoration: 'none', color: 'black' }}>
             <ListItemText primary='Vote' />
+          </a>
           </ListItem>
         </List>
       </div>
@@ -48,8 +60,8 @@ export default class Navbar extends React.Component {
     return (
       <div >
         <div style={{
-          position:'fixed',
-          top: '20px', left: '20px'
+          position: 'fixed',
+          top: '20px', left: '20px',
         }}>
           <Fab onClick={this.toggleDrawer('left', true)}><MenuIcon /></Fab>
         </div>

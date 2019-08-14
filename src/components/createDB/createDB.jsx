@@ -12,7 +12,7 @@ import {
     Tooltip,
     TextField
 } from "@material-ui/core";
-import AssignmentIcon from "@material-ui/icons/Assessment"
+import AssignmentIcon from "@material-ui/icons/Assignment"
 import db from "../../contractsJSON/publicDB";
 
 const Web3 = require("web3");
