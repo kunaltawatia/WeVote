@@ -90,6 +90,7 @@ export default class Vote extends React.Component {
               >
                 <option value="unauthenticated">Unauthenticated Voting</option>
                 <option value="authenticated">Authenticated Voting</option>
+                <option value="petition">Petition</option>
               </Select>
               <Button
                 type="submit"
@@ -102,7 +103,8 @@ export default class Vote extends React.Component {
           </form>
         )}
 
-        {this.props.contractAddress && <VotingComponent {...this.props} />}
+        {this.props.contractAddress && this.props.votingContractType != 'petition' && <VotingComponent {...this.props} />}
+        {this.props.votingContractType == 'petition' && <PetitionComponent {...this.props} />}
 
       </Card>
     );
@@ -169,8 +171,6 @@ class VotingComponent extends React.Component {
           .then(result => {
             console.log('options', result);
             this.setState({ optionCount: result });
-            if (this.state.optionCount != this.state.options.length)
-              alert("BLOCK IS INFECTED");
           });
       })
       .then(() => {
@@ -194,6 +194,22 @@ class VotingComponent extends React.Component {
             this.setState({
               voted: res
             });
+          });
+        this.setState({ votersVoted: [] });
+        Ballot.methods
+          .totalVoters()
+          .call()
+          .then(res => {
+            for (var i = 0; i < res; i++) {
+              Ballot.methods
+                .votersVoted(i)
+                .call()
+                .then(result => {
+                  this.setState({
+                    votersVoted: [...this.state.votersVoted, result]
+                  });
+                });
+            }
           });
       })
       .then(() => {
@@ -235,7 +251,8 @@ class VotingComponent extends React.Component {
               if (index + 1 == event.returnValues._choice)
                 return parseInt(res) + 1;
               return res;
-            })
+            }),
+            votersVoted: [...this.state.votersVoted, event.returnValues.sender]
           });
         })
         .on("changed", event => {
@@ -358,9 +375,213 @@ class VotingComponent extends React.Component {
             );
           })}
         </Grid>
-        {this.state.voted != 0 && <Typography style={{ fontWeight: 'bold' }}>{sum} VOTES CASTED</Typography>}
-        {this.state.notRegistered ? <Button onClick={() => { this.props._handleContractAddress({ dbContractAddress: this.state.dbAddr }); this.setState({ redirect: true }) }}>Register To Vote</Button> : <div />
-        }
+        {this.state.notRegistered ? <Button onClick={() => { this.props._handleContractAddress({ dbContractAddress: this.state.dbAddr }); this.setState({ redirect: true }) }}>Register To Vote</Button> : <div />}
+        <Card style={{ borderRadius: 50 }} className="card">
+          <Typography style={{ fontWeight: 'bold' }}>{sum} VOTES CASTED</Typography>
+          {this.state.votersVoted && <div>
+            {this.state.votersVoted.map((voter) => {
+              return (
+                <Typography style={{ fontWeight: 'bold', margin: 20 }}>{voter}</Typography>
+              )
+            })}
+          </div>}
+        </Card>
+      </div>
+    );
+  }
+}
+
+class PetitionComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      result: [],
+      contractLoaded: false
+    }
+  }
+  componentDidMount() {
+    if (window.ethereum) {
+      web3 = new Web3(window.ethereum);
+      try {
+        window.ethereum.enable().then(function () {
+          // User has allowed account access to DApp...
+          accountaddress = web3.givenProvider.selectedAddress;
+        });
+      } catch (err) {
+        // User has denied account access to DApp...
+        alert("You have denied access to MetaMask request. Reload the page. ");
+      }
+    }
+    // Legacy DApp Browsers
+    else if (window.web3) {
+      web3 = new Web3(window.web3.currentProvider);
+      web3.eth.sendTransaction({
+        /* ... */
+      });
+    }
+    // Non-DApp Browsers
+    else {
+      alert("You have to install MetaMask extension for your browser !");
+    }
+
+    this._update.bind(this)(ballot.abi, true);
+  }
+  _update(abi, initialising) {
+    Ballot = new web3.eth.Contract(abi, this.props.contractAddress);
+    Ballot.methods
+      .regex()
+      .call()
+      .then(result => {
+        console.log('regex', result);
+        this.setState({
+          regex: result,
+          body: result.split("_=_").filter((el, ind) => ind !== 0),
+          title: result.split("_=_")[0]
+        });
+      })
+      .then(() => {
+        Ballot.methods
+          .options()
+          .call()
+          .then(result => {
+            console.log('options', result);
+            this.setState({ optionCount: result });
+            if (this.state.optionCount != 1)
+              alert("BLOCK IS INFECTED");
+          });
+      })
+      .then(() => {
+        this.setState({ result: [] })
+        Ballot.methods
+          .result(1)
+          .call()
+          .then(res => {
+            this.setState({
+              result: [...this.state.result, res]
+            });
+          });
+        Ballot.methods
+          .voted(web3.givenProvider.selectedAddress)
+          .call()
+          .then(res => {
+            console.log('voted', res)
+            this.setState({
+              voted: res
+            });
+          });
+        Ballot.methods
+          .voted(web3.givenProvider.selectedAddress)
+          .call()
+          .then(res => {
+            console.log('voted', res)
+            this.setState({
+              voted: res
+            });
+          });
+        this.setState({ votersVoted: [] });
+        Ballot.methods
+          .totalVoters()
+          .call()
+          .then(res => {
+            for (var i = 0; i < res; i++) {
+              Ballot.methods
+                .votersVoted(i)
+                .call()
+                .then(result => {
+                  this.setState({
+                    votersVoted: [...this.state.votersVoted, result]
+                  });
+                });
+            }
+          });
+      })
+      .then(() => {
+        setTimeout(() => {
+          this.setState({ contractLoaded: true });
+        }, 200);
+      });
+    if (initialising)
+      Ballot.events
+        .addVote({}, (error, event) => { })
+        .on("data", event => {
+          console.log(event.returnValues);
+          this.setState({
+            result: parseInt(this.state.result) + 1,
+            votersVoted: [...this.state.votersVoted, event.returnValues.sender]
+          });
+        })
+        .on("changed", event => {
+          // remove event from local database
+        })
+        .on("error", console.error);
+  }
+
+  doVote(option) {
+    accountaddress = web3.givenProvider.selectedAddress;
+    var mygas;
+    Ballot.methods
+      .vote(option)
+      .estimateGas({ from: accountaddress })
+      .then(function (gasAmount) {
+        mygas = gasAmount;
+      });
+    Ballot.methods
+      .vote(option)
+      .send({
+        from: web3.givenProvider.selectedAddress,
+        gas: 1308700,
+        gasPrice: web3.eth.gasPrice,
+        gasLimit: 2000000
+      })
+      .on("transactionHash", hash => {
+        console.log(hash);
+      })
+      .on("receipt", receipt => {
+        console.log(receipt);
+      })
+      .on("confirmation", (confirmationNumber, receipt) => {
+        console.log(confirmationNumber, receipt);
+      })
+      .on("error", error => alert(error.message))
+      .then(() => {
+        this._update.bind(this)(ballot.abi, false)
+      });
+  }
+
+  render() {
+    if (!this.state.contractLoaded) {
+      return (
+        <CircularProgress />
+      );
+    }
+    if (this.state.redirect) {
+      return (
+        <Redirect to='/registration' />
+      )
+    }
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'column' }}>
+        <Typography variant="h6" align="center" style={{ fontFamily: "Roboto Mono", margin: 20, fontWeight: 'bold' }}>{this.props.contractAddress}<br />{this.state.title}</Typography>
+        <Typography variant="body1" align="center" style={{ fontFamily: "Roboto Mono", margin: 20 }}>{this.state.body}</Typography>
+        <Button
+          onClick={() => { this.doVote(1) }}
+          disabled={this.state.voted != 0 ? true : false}
+          color="primary"
+          variant="contained"
+        >
+          Sign Petition
+        </Button>
+        {this.state.notRegistered ? <Button onClick={() => { this.props._handleContractAddress({ dbContractAddress: this.state.dbAddr }); this.setState({ redirect: true }) }}>Register To Vote</Button> : <div />}
+        <Card style={{ borderRadius: 50 }} className="card">
+          <Typography style={{ fontWeight: 'bold', margin: 20 }}>{this.state.result} SIGNED THIS PETITION</Typography>
+          {this.state.votersVoted && <div>
+            {this.state.votersVoted.map((voter) => {
+              return (
+                <Typography style={{ fontWeight: 'bold', margin: 20 }}>{voter}</Typography>
+              )
+            })}
+          </div>}
+        </Card>
       </div>
     );
   }

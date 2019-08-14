@@ -8,6 +8,7 @@ import Profile from "./components/profile/profile";
 import Registration from "./components/registration/registration";
 import CreateDB from "./components/createDB/createDB";
 import Vote from "./components/Vote";
+import BuildPetition from "./components/buildPetition";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -35,6 +36,16 @@ export default class App extends React.Component {
               // component={hello}
               render={() => (
                 <CreateBallot
+                  _handleContractAddress={this._changeContractAddress.bind(this)}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/buildPetition"
+              // component={hello}
+              render={() => (
+                <BuildPetition
                   _handleContractAddress={this._changeContractAddress.bind(this)}
                 />
               )}

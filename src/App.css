@@ -34,6 +34,39 @@ select {
     outline: none;
 }
 
+.title-input {
+    width: 100%;
+    height: 1.5rem;
+    font-size: 1.1rem;
+    font-family: 'Roboto Mono';
+    border: 0;
+    text-align: center;
+    word-wrap: normal;
+    font-weight: bold;
+}
+
+.title-input,
+textarea,
+select {
+    outline: none;
+}
+
+.body-input {
+    width: 50vw;
+    height: 55vh;
+    font-size: 1rem;
+    font-family: 'Roboto Mono';
+    border: 0;
+    text-align: center;
+    word-wrap: normal;
+}
+
+.body-input,
+textarea,
+select {
+    outline: none;
+}
+
 .option-input {
     margin-left: 2rem;
     font-size: 0.8rem;

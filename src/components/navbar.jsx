@@ -48,7 +48,7 @@ export default class Navbar extends React.Component {
     return (
       <div >
         <div style={{
-          position: 'absolute',
+          position:'fixed',
           top: '20px', left: '20px'
         }}>
           <Fab onClick={this.toggleDrawer('left', true)}><MenuIcon /></Fab>
