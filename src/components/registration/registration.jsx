@@ -73,7 +73,7 @@ export default class Vote extends React.Component {
             />
             <br />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button
+              <Button  style={{borderRadius:50,margin:10}} 
                 type="submit"
                 color="primary"
                 variant="contained"
@@ -198,7 +198,7 @@ class VotingComponent extends React.Component {
           this.state.result.length == 0 &&
           <form onSubmit={(e) => { e.preventDefault(); this.register.bind(this)(this.state.details) }}>
             <TextField id="details" value={this.state.details} onChange={this._handleChange.bind(this)} />
-            <Button type="submit">Submit</Button>
+            <Button  style={{borderRadius:50,margin:10}}  type="submit">Submit</Button>
           </form>
         }
       </div>

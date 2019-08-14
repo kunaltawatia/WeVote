@@ -68,7 +68,7 @@ class candidate_list extends Component {
                                 </Grid>
                             ))}
                         </Grid>
-                        <Button size="small" style={{ position:'absolute',backgroundColor: 'Blue',color:'white'}} >
+                        <Button  size="small" style={{ position:'absolute',backgroundColor: 'Blue',color:'white'}} >
                    Submit
                 </Button>
                 <Button size="small" color="primary" ></Button>

@@ -92,7 +92,7 @@ export default class Vote extends React.Component {
                 <option value="authenticated">Authenticated Voting</option>
                 <option value="petition">Petition</option>
               </Select>
-              <Button
+              <Button style={{borderRadius:50,margin:10}} 
                 type="submit"
                 color="primary"
                 variant="contained"
@@ -375,7 +375,7 @@ class VotingComponent extends React.Component {
             );
           })}
         </Grid>
-        {this.state.notRegistered ? <Button onClick={() => { this.props._handleContractAddress({ dbContractAddress: this.state.dbAddr }); this.setState({ redirect: true }) }}>Register To Vote</Button> : <div />}
+        {this.state.notRegistered ? <Button style={{borderRadius:50,margin:10}} onClick={() => { this.props._handleContractAddress({ dbContractAddress: this.state.dbAddr }); this.setState({ redirect: true }) }} variant="contained" color="secondary">Register To Vote</Button> : <div />}
         <Card style={{ borderRadius: 50 }} className="card">
           <Typography style={{ fontWeight: 'bold' }}>{sum} VOTES CASTED</Typography>
           {this.state.votersVoted && <div>
@@ -563,7 +563,7 @@ class PetitionComponent extends React.Component {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'column' }}>
         <Typography variant="h6" align="center" style={{ fontFamily: "Roboto Mono", margin: 20, fontWeight: 'bold' }}>{this.props.contractAddress}<br />{this.state.title}</Typography>
         <Typography variant="body1" align="center" style={{ fontFamily: "Roboto Mono", margin: 20 }}>{this.state.body}</Typography>
-        <Button
+        <Button style={{borderRadius:50,margin:10}} 
           onClick={() => { this.doVote(1) }}
           disabled={this.state.voted != 0 ? true : false}
           color="primary"
@@ -571,7 +571,6 @@ class PetitionComponent extends React.Component {
         >
           Sign Petition
         </Button>
-        {this.state.notRegistered ? <Button onClick={() => { this.props._handleContractAddress({ dbContractAddress: this.state.dbAddr }); this.setState({ redirect: true }) }}>Register To Vote</Button> : <div />}
         <Card style={{ borderRadius: 50 }} className="card">
           <Typography style={{ fontWeight: 'bold', margin: 20 }}>{this.state.result} SIGNED THIS PETITION</Typography>
           {this.state.votersVoted && <div>

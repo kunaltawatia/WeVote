@@ -140,7 +140,7 @@ export default class CreateBallot extends React.Component {
                                     </Link>
                                 </Grid>
                                 <Grid item xs={6} className="submit">
-                                    <Button
+                                    <Button  style={{borderRadius:50,margin:10}} 
                                         color="primary"
                                         variant="contained"
                                         onClick={() => {
@@ -182,7 +182,7 @@ export default class CreateBallot extends React.Component {
                         margin: 10,
                         bottom: 0
                     }}>
-                        <Button color="secondary" type="submit">Create Database</Button>
+                        <Button  style={{borderRadius:50,margin:10}} color="secondary" type="submit">Create Database</Button>
                     </div>
                 </form>
             </Card>
