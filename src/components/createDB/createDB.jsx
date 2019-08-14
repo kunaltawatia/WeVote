@@ -182,7 +182,7 @@ export default class CreateBallot extends React.Component {
                         margin: 10,
                         bottom: 0
                     }}>
-                        <Button  style={{borderRadius:50,margin:10}} color="secondary" type="submit">Create Database</Button>
+                        <Button  style={{borderRadius:50,margin:10}} variant="contained" color="secondary" type="submit">Create Database</Button>
                     </div>
                 </form>
             </Card>
