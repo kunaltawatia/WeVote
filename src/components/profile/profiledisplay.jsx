@@ -11,7 +11,7 @@ const Display = (props) => {
         <div style={{ textAlign: 'center'}}>
             { props.candidatee ? (
                 <Card classname = 'card'>
-                <CardMedia style={{height: '300px', width : '300px', borderRadius: '25%', marginLeft: 'auto' , marginRight: 'auto'}}
+                <CardMedia style={{height: '150px', width : '150px', borderRadius: '100%', marginLeft: 'auto' , marginRight: 'auto'}}
                image={props.candidatee.fields.profilePhoto.fields.file.url}
                title={props.candidatee.fields.title}
                />

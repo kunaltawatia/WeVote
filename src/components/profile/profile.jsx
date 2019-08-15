@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import * as contentful from 'contentful'
 import Display from '../profile/profiledisplay'
-import NavBar from '../navbar'
 const SPACE_ID = '7pte3qqcp50e'
 const ACCESS_TOKEN = 'Eu_I0CfdUjZ6FG0tDhypZchsaWtrtvCNg_kSIqMb1Mg'
  
@@ -37,7 +36,6 @@ getCandidates = () => {
   render() {
     return (
         <div>
-            < NavBar />
             { this.state.candidate ? (
                     <div>
                         
