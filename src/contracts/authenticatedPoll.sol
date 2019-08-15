@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 contract publicDB{
-    function getDetails(address addr) public view returns(string memory){}
+    function getDetails(address addr) public view returns(bool){}
 }
 contract authenticatedPoll {
     string public regex;
@@ -19,8 +19,8 @@ contract authenticatedPoll {
     }
     event addVote(uint8 _choice,address sender);
     function vote(uint8 _choice) public{
-        string memory name = getData(msg.sender);
-        require(bytes(name).length > 4,"Not Subscribed Voter");
+        bool authorisedVoter = getData(msg.sender);
+        require(authorisedVoter == true,"Not Subscribed Voter");
         require(_choice > 0 && _choice <= options,"Invalid Choice");
         require(voted[msg.sender] == 0,"Already Voted");
         voted[msg.sender] = _choice;
@@ -29,7 +29,7 @@ contract authenticatedPoll {
         totalVoters += 1;
         emit addVote(_choice,msg.sender);
     }
-    function getData(address addr) public view returns(string memory){
+    function getData(address addr) public view returns(bool){
         return db.getDetails(addr);
     }
 }

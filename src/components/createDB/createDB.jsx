@@ -58,7 +58,7 @@ export default class CreateBallot extends React.Component {
     _handleClick(event) {
         event.preventDefault();
         this.setState({ loading: 1 });
-        var details = this.state.name;
+        var details = [this.state.name,this.state.age].join('_=_');
         dbContract
             .deploy({
                 data: db.bytecode,
@@ -176,7 +176,9 @@ export default class CreateBallot extends React.Component {
             <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.6)', maxWidth: '60vw' }} className="card">
                 <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
                 <form onSubmit={this._handleClick}>
-                    <TextField id="name" value={this.state.name} label="Database Owner" type="outlined" onChange={this._handleChange} fullWidth />
+                    <TextField style={{margin:5,width:"80%"}} required id="name" value={this.state.name} label="Database Owner Name" type="outlined" onChange={this._handleChange} />
+                    <TextField style={{margin:5,width:"80%"}} required id="age" value={this.state.age} label="Database Owner Age" type="outlined" onChange={this._handleChange}  />
+
                     <div style={{
                         textAlign: 'right',
                         margin: 10,

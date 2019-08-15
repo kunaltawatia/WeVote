@@ -48,6 +48,10 @@ export default class Navbar extends React.Component {
             <ListItemText primary='Create Database' />
           </a>
           </ListItem>
+          <ListItem><a href="./registration" style={{ textDecoration: 'none', color: 'black' }}>
+            <ListItemText primary='Database Interaction' />
+          </a>
+          </ListItem>
           <ListItem><a href="./vote" style={{ textDecoration: 'none', color: 'black' }}>
             <ListItemText primary='Vote' />
           </a>

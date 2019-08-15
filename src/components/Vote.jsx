@@ -218,8 +218,8 @@ class VotingComponent extends React.Component {
             .getData(web3.givenProvider.selectedAddress)
             .call()
             .then(res => {
-              console.log(res, res.length == 0, 'res');
-              if (res.length == 0) {
+              console.log(res, 'res');
+              if (res == false) {
                 this.setState({
                   notRegistered: true
                 })

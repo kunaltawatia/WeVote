@@ -16,15 +16,17 @@ contract publicDB{
         authorisation[msg.sender] = true;
         voterCount = 1;
     }
-    function getDetails(address addr) public view returns(string memory){
-        return details[addr];
+    function getDetails(address addr) public view returns(bool result){
+        return authorisation[addr];
     }
+    event detailsAdded(address addr,string details);
     function addDetails(string memory detail) public{
         details[msg.sender] = detail;
         voters.push(msg.sender);
         authorisation[msg.sender] = false;
         voterCount = voterCount + 1;
         reports[msg.sender] = 0;
+        emit detailsAdded(msg.sender,detail);
     }
     function authorise(address voterAddress) public{
         require(msg.sender == owner,"Only Owner Can Authorise");

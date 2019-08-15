@@ -5,7 +5,7 @@ import Card from "@material-ui/core/Card";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import publicDB from "../../contractsJSON/publicDB";
 import TextField from "@material-ui/core/TextField";
-import { Tooltip, IconButton, Typography } from "@material-ui/core";
+import { Tooltip, IconButton, Typography, Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import DoneIcon from "@material-ui/icons/Done";
@@ -55,7 +55,7 @@ export default class App extends React.Component {
   }
   render() {
     return (
-      <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.6)', maxWidth: '60vw' }} className="card">
+      <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.9)', maxWidth: '60vw' }} className="card">
         <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
         <br />
         {!this.props.dbContractAddress && (
@@ -133,12 +133,12 @@ class Database extends React.Component {
     }
 
     setTimeout(() => {
-      this._update.bind(this)();
+      this._update.bind(this)(true);
     }, 500);
   }
-  _update() {
+  _update(initialising) {
     db = new web3.eth.Contract(publicDB.abi, this.props.dbContractAddress);
-    this.setState({ contractLoaded: false,voters:[],authorised:[],details:[],reports:[] })
+    this.setState({ contractLoaded: false, voters: [], authorised: [], details: [], reports: [] })
     db.methods
       .voterCount()
       .call()
@@ -184,7 +184,7 @@ class Database extends React.Component {
                 })
               });
           }
-        }, 600);
+        }, 1000);
       });
     db.methods
       .owner()
@@ -196,19 +196,33 @@ class Database extends React.Component {
           accountaddress: web3.givenProvider.selectedAddress
         });
       });
+    if (initialising) {
+      db.events
+        .detailsAdded({}, (error, event) => { })
+        .on("data", event => {
+          console.log(event.returnValues);
+          // this.setState({
+          //   voters: [...this.state.voters, event.returnValues.addr],
+          //   authorised: [...this.state.authorised, false],
+          //   reports: [...this.state.reports, 0],
+          //   details: [...this.state.details, event.returnValues.details]
+          // });
+          setTimeout(() => {            
+            this._update.bind(this)(false);
+        }, 1000);
+      })
+        .on("changed", event => {
+          // remove event from local database
+        })
+        .on("error", console.error);
+    }
   }
 
   register(details) {
     accountaddress = web3.givenProvider.selectedAddress;
-    var mygas;
+    console.log([this.state.name, this.state.age].join('_=_'));
     db.methods
-      .addDetails(details)
-      .estimateGas({ from: accountaddress })
-      .then(function (gasAmount) {
-        mygas = gasAmount;
-      });
-    db.methods
-      .addDetails(details)
+      .addDetails([this.state.name, this.state.age].join('_=_'))
       .send({
         from: web3.givenProvider.selectedAddress,
         gas: 1308700,
@@ -220,15 +234,12 @@ class Database extends React.Component {
       })
       .on("receipt", receipt => {
         console.log(receipt);
+        this._update.bind(this)(false);
       })
       .on("confirmation", (confirmationNumber, receipt) => {
         console.log(confirmationNumber, receipt);
       })
       .on("error", error => alert(error.message))
-      .then(() => {
-        this._update.bind(this)();
-        this.setState({ redirect: true });
-      })
   }
   authorise(address) {
     db.methods
@@ -250,7 +261,7 @@ class Database extends React.Component {
       })
       .on("error", error => alert(error.message))
       .then(() => {
-        this._update.bind(this)();
+        this._update.bind(this)(false);
       })
   }
   unauthorise(address) {
@@ -273,7 +284,7 @@ class Database extends React.Component {
       })
       .on("error", error => alert(error.message))
       .then(() => {
-        this._update.bind(this)();
+        this._update.bind(this)(false);
       })
   }
   report(address) {
@@ -296,7 +307,7 @@ class Database extends React.Component {
       })
       .on("error", error => alert(error.message))
       .then(() => {
-        this._update.bind(this)();
+        this._update.bind(this)(false);
       })
   }
   _handleChange(event) {
@@ -309,89 +320,109 @@ class Database extends React.Component {
         <CircularProgress />
       );
     }
-    if (this.state.redirect) {
-      return <Redirect to="/vote" />
-    }
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'column', maxHeight: '80vh', overflow: 'auto' }}>
-        {/* {this.state.result.length > 0 &&
-          <Typography variant="h6" align="center" style={{ fontFamily: "Roboto Mono", margin: 20 }}>Registered Under {this.props.dbContractAddress} as:<br />{this.state.result}</Typography>
-        } */}
-        {/* {
-          this.state.result.length == 0 &&
-          <form onSubmit={(e) => { e.preventDefault(); this.register.bind(this)(this.state.details) }}>
-            <TextField id="details" value={this.state.details} onChange={this._handleChange.bind(this)} />
-            <Button style={{ borderRadius: 50, margin: 10 }} type="submit">Submit</Button>
-          </form>
-        } */}
-        {voterCount && voters.length == voterCount && voters.map((item, index) => {
-          return (
-            <div>
-              <div style={{ margin: 10, padding: 10 }} class="input-root">
-                <Tooltip title="Voter Address">
-                  <input style={{
-                    width: 400,
-                    backgroundColor: 'white',
-                  }}
-                    className="option-input"
-                    value={item}
-                    fullwidth
-                    disabled
-                  />
-                </Tooltip>
-                <div>
-                  {
-                    this.state.authorised[index] &&
-                    <Tooltip title="Authorised Voter">
-                      <IconButton
-                        style={{
-                          backgroundColor: 'green'
-                        }}>
-                        <DoneIcon />
-                      </IconButton>
-                    </Tooltip>
-                  }
-                  {this.state.owner && this.state.accountaddress &&
-                    this.state.owner.toUpperCase() == this.state.accountaddress.toUpperCase() ? (
+      <div>
+        <Typography variant="h6" align="left" style={{ fontFamily: "DM Serif Text", margin: 10 }}>{this.props.dbContractAddress}<br />Roll Supervisor<br /></Typography>
+        {this.state.details[0] &&
+          <div>
+            <Typography variant="body1" style={{ fontFamily: 'Roboto Mono', textAlign: 'left', marginLeft: 30, marginBottom: 20 }}>
+              Address: {this.state.voters[0]} <br />
+              Name: {this.state.details[0].split('_=_')[0]}<br />
+              Age: {this.state.details[0].split('_=_')[1]}
+            </Typography>
+          </div>}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'column', maxHeight: '60vh', overflow: 'auto' }}>
+          <Typography variant="h6" align="center" style={{ fontFamily: "Roboto Mono", margin: 20 }}>Democratic Roll</Typography>
+          {voterCount && voters.length == voterCount && voters.map((item, index) => {
+            if (index == 0) {
+              return (<div />)
+            }
+            return (
+              <div style={{ borderRadius: 10, boxShadow: '1.5px 1.5px 10.5px 5.5px #888888', margin: 10 }} class="card">
+                <div style={{ margin: 10, padding: 10 }} class="input-root">
+                  <Tooltip title="Voter Address">
+                    <input style={{
+                      width: 400,
+                      backgroundColor: 'white',
+                    }}
+                      className="option-input"
+                      value={item}
+                      fullwidth
+                      disabled
+                    />
+                  </Tooltip>
+                  <div>
+                    {
                       this.state.authorised[index] ?
-                        <Tooltip title="__UNAUTHORISE__ this voter">
+                        <Tooltip title="Authorised Voter">
                           <IconButton
-                            color="secondary"
-                            onClick={(e)=>{e.preventDefault();this.unauthorise.bind(this)(item)}}
-                          >
+                            style={{
+                              backgroundColor: 'green'
+                            }}>
+                            <DoneIcon />
+                          </IconButton>
+                        </Tooltip> :
+                        <Tooltip title="Unauthorised Voter">
+                          <IconButton
+                            style={{
+                              backgroundColor: 'orange'
+                            }}>
                             <CloseIcon />
                           </IconButton>
                         </Tooltip>
-                        :
-                        <Tooltip title="__AUTHORISE__ this voter">
-                          <IconButton
-                            color="primary"
-                            onClick={(e)=>{e.preventDefault();this.authorise.bind(this)(item)}}
-                          >
-                            <AddIcon />
-                          </IconButton>
-                        </Tooltip>
-                    ) : <Tooltip title="__REPORT__ this voter">
-                      <IconButton
-                        color="secondary"
-                        onClick={(e)=>{e.preventDefault();this.report.bind(this)(item)}}
-                      >
-                        <WarningIcon />
-                      </IconButton>
-                    </Tooltip>
-                  }
+                    }
+                    {this.state.owner && this.state.accountaddress &&
+                      this.state.owner.toUpperCase() == this.state.accountaddress.toUpperCase() ? (
+                        this.state.authorised[index] ?
+                          <Tooltip title="__UNAUTHORISE__ this voter">
+                            <IconButton
+                              color="secondary"
+                              onClick={(e) => { e.preventDefault(); this.unauthorise.bind(this)(item) }}
+                            >
+                              <CloseIcon />
+                            </IconButton>
+                          </Tooltip>
+                          :
+                          <Tooltip title="__AUTHORISE__ this voter">
+                            <IconButton
+                              color="primary"
+                              onClick={(e) => { e.preventDefault(); this.authorise.bind(this)(item) }}
+                            >
+                              <AddIcon />
+                            </IconButton>
+                          </Tooltip>
+                      ) : <div />
+                    }
+                  </div>
                 </div>
+                {this.state.details[index] && <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="body1" style={{ fontFamily: 'Roboto Mono', textAlign: 'left', marginLeft: 10 }}>
+                    Name: {this.state.details[index].split('_=_')[0]}<br />
+                    Age: {this.state.details[index].split('_=_')[1]}<br />
+                    {this.state.owner && this.state.accountaddress &&
+                      this.state.owner.toUpperCase() == this.state.accountaddress.toUpperCase() ? 'User Reported: ' + this.state.reports[index] + ' times' : ''}
+                  </Typography>
+                  <Tooltip title="__REPORT__ this voter">
+                    <Fab
+                      size="small"
+                      color="secondary"
+                      variant="extended"
+                      onClick={(e) => { e.preventDefault(); this.report.bind(this)(item) }}
+                    >
+                      Report Voter
+                    </Fab>
+                  </Tooltip>
+                </div>}
               </div>
-              {this.state.details[index] && <div style={{ backgroundColor: 'white', borderRadius: 50, boxShadow: '1.5px 1.5px 1.5px 0.5px #888888' }} class="card">
-                <Typography variant="body1" style={{ fontFamily: 'Roboto Mono' }}>
-                  Name: {this.state.details[index].split('_=_')[0]}<br />
-                  Age: {this.state.details[index].split('_=_')[1]}<br />
-                  User Reported: {this.state.reports[index]} times
-                </Typography>
-              </div>}
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
+        <Typography variant="h6" align="left" style={{ fontFamily: "DM Serif Text", margin: "40px 10px 5px 20px" }}>Register</Typography>
+        <form onSubmit={(e) => { e.preventDefault(); this.register.bind(this)() }}>
+          <TextField style={{ margin: 5, width: "80%" }} id="name" value={this.state.name} required onChange={this._handleChange.bind(this)} label="Name" /><br />
+          <TextField style={{ margin: 5, width: "80%" }} id="age" value={this.state.age} required onChange={this._handleChange.bind(this)} label="Age" /><br />
+          <Button style={{ borderRadius: 50, margin: 10 }} variant="contained" color="primary" type="submit">Submit</Button>
+        </form>
       </div>
     );
   }
