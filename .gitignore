@@ -27,3 +27,7 @@ yarn-error.log*
 # /migrations
 /test
 # truffle-config.js
+
+#server
+
+/server/node_modules

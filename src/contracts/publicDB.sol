@@ -6,6 +6,7 @@ contract publicDB{
     mapping (address => string) public details ;
     mapping(address=>bool) public authorisation;
     mapping(address=>uint8) public reports;
+    mapping(address=>uint8) public voterIndex;
     uint8 public voterCount;
     constructor(string memory detail)
     public
@@ -15,16 +16,20 @@ contract publicDB{
         voters.push(msg.sender);
         authorisation[msg.sender] = true;
         voterCount = 1;
+        voterIndex[msg.sender] = 1;
     }
     function getDetails(address addr) public view returns(bool result){
         return authorisation[addr];
     }
     event detailsAdded(address addr,string details);
     function addDetails(string memory detail) public{
+        if(voterIndex[msg.sender] == 0 ){
+            voters.push(msg.sender);
+            voterIndex[msg.sender] = voterCount + 1;
+            voterCount = voterCount + 1;
+        }
         details[msg.sender] = detail;
-        voters.push(msg.sender);
         authorisation[msg.sender] = false;
-        voterCount = voterCount + 1;
         reports[msg.sender] = 0;
         emit detailsAdded(msg.sender,detail);
     }

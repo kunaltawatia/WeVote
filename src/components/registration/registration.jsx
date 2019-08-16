@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import Button from "@material-ui/core/Button";
@@ -5,7 +6,7 @@ import Card from "@material-ui/core/Card";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import publicDB from "../../contractsJSON/publicDB";
 import TextField from "@material-ui/core/TextField";
-import { Tooltip, IconButton, Typography, Fab } from "@material-ui/core";
+import { Tooltip, IconButton, Typography, Fab, Divider } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import DoneIcon from "@material-ui/icons/Done";
@@ -138,7 +139,7 @@ class Database extends React.Component {
   }
   _update(initialising) {
     db = new web3.eth.Contract(publicDB.abi, this.props.dbContractAddress);
-    this.setState({ contractLoaded: false, voters: [], authorised: [], details: [], reports: [] })
+    this.setState({ contractLoaded: false, voters: [], authorised: [], details: [], reports: [], registrationLoading: false })
     db.methods
       .voterCount()
       .call()
@@ -154,37 +155,32 @@ class Database extends React.Component {
               this.setState({
                 voters: [...this.state.voters, result]
               });
+              db.methods
+                .authorisation(result)
+                .call()
+                .then(result => {
+                  this.setState({
+                    authorised: [...this.state.authorised, result]
+                  })
+                });
+              db.methods
+                .reports(result)
+                .call()
+                .then(result => {
+                  this.setState({
+                    reports: [...this.state.reports, result]
+                  })
+                });
+              db.methods
+                .details(result)
+                .call()
+                .then(result => {
+                  this.setState({
+                    details: [...this.state.details, result]
+                  })
+                });
             });
         }
-        setTimeout(() => {
-
-          for (var j = 0; j < result; j++) {
-            db.methods
-              .authorisation(this.state.voters[j])
-              .call()
-              .then(result => {
-                this.setState({
-                  authorised: [...this.state.authorised, result]
-                })
-              });
-            db.methods
-              .reports(this.state.voters[j])
-              .call()
-              .then(result => {
-                this.setState({
-                  reports: [...this.state.reports, result]
-                })
-              });
-            db.methods
-              .details(this.state.voters[j])
-              .call()
-              .then(result => {
-                this.setState({
-                  details: [...this.state.details, result]
-                })
-              });
-          }
-        }, 1000);
       });
     db.methods
       .owner()
@@ -207,10 +203,10 @@ class Database extends React.Component {
           //   reports: [...this.state.reports, 0],
           //   details: [...this.state.details, event.returnValues.details]
           // });
-          setTimeout(() => {            
+          setTimeout(() => {
             this._update.bind(this)(false);
-        }, 1000);
-      })
+          }, 1000);
+        })
         .on("changed", event => {
           // remove event from local database
         })
@@ -220,7 +216,7 @@ class Database extends React.Component {
 
   register(details) {
     accountaddress = web3.givenProvider.selectedAddress;
-    console.log([this.state.name, this.state.age].join('_=_'));
+    this.setState({ registrationLoading: true });
     db.methods
       .addDetails([this.state.name, this.state.age].join('_=_'))
       .send({
@@ -234,14 +230,17 @@ class Database extends React.Component {
       })
       .on("receipt", receipt => {
         console.log(receipt);
-        this._update.bind(this)(false);
       })
       .on("confirmation", (confirmationNumber, receipt) => {
         console.log(confirmationNumber, receipt);
       })
       .on("error", error => alert(error.message))
+      .then(() => {
+        this.setState({ name: '', age: '', registrationLoading: false });
+      })
   }
   authorise(address) {
+    // this.setState({ authorisationLoading: { ...this.state.authorisationLoading, address: true } });
     db.methods
       .authorise(address)
       .send({
@@ -284,7 +283,9 @@ class Database extends React.Component {
       })
       .on("error", error => alert(error.message))
       .then(() => {
-        this._update.bind(this)(false);
+        setTimeout(() => {
+          this._update.bind(this)(false);
+        }, 1000);
       })
   }
   report(address) {
@@ -307,7 +308,9 @@ class Database extends React.Component {
       })
       .on("error", error => alert(error.message))
       .then(() => {
-        this._update.bind(this)(false);
+        setTimeout(() => {
+          this._update.bind(this)(false);
+        }, 1000);
       })
   }
   _handleChange(event) {
@@ -322,15 +325,32 @@ class Database extends React.Component {
     }
     return (
       <div>
-        <Typography variant="h6" align="left" style={{ fontFamily: "DM Serif Text", margin: 10 }}>{this.props.dbContractAddress}<br />Roll Supervisor<br /></Typography>
-        {this.state.details[0] &&
+        <Typography variant="h6" align="center" style={{ fontFamily: "DM Serif Text", margin: 10 }}>Database<br />{this.props.dbContractAddress}
+        </Typography>
+        <Divider />
+        <Typography variant="h6" align="left" style={{ fontFamily: "DM Serif Text", margin: 10 }}>Roll Supervisor<br /></Typography>
+        {this.state.details[0] ?
           <div>
             <Typography variant="body1" style={{ fontFamily: 'Roboto Mono', textAlign: 'left', marginLeft: 30, marginBottom: 20 }}>
               Address: {this.state.voters[0]} <br />
               Name: {this.state.details[0].split('_=_')[0]}<br />
               Age: {this.state.details[0].split('_=_')[1]}
             </Typography>
-          </div>}
+          </div> : <CircularProgress />
+        }
+        <Divider />
+        {
+          this.state.registrationLoading ? <CircularProgress /> :
+            <div>
+              <Typography variant="h6" align="left" style={{ fontFamily: "DM Serif Text", margin: "40px 10px 5px 20px" }}>Register/Update your details</Typography>
+              <form onSubmit={(e) => { e.preventDefault(); this.register.bind(this)() }}>
+                <TextField style={{ margin: 5, width: "80%" }} id="name" value={this.state.name} required onChange={this._handleChange.bind(this)} label="Name" /><br />
+                <TextField style={{ margin: 5, width: "80%" }} id="age" value={this.state.age} required onChange={this._handleChange.bind(this)} label="Age" /><br />
+                <Button style={{ borderRadius: 50, margin: 10 }} variant="contained" color="primary" type="submit">Submit</Button>
+              </form>
+            </div>
+        }
+        <Divider />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'column', maxHeight: '60vh', overflow: 'auto' }}>
           <Typography variant="h6" align="center" style={{ fontFamily: "Roboto Mono", margin: 20 }}>Democratic Roll</Typography>
           {voterCount && voters.length == voterCount && voters.map((item, index) => {
@@ -417,12 +437,7 @@ class Database extends React.Component {
             )
           })}
         </div>
-        <Typography variant="h6" align="left" style={{ fontFamily: "DM Serif Text", margin: "40px 10px 5px 20px" }}>Register</Typography>
-        <form onSubmit={(e) => { e.preventDefault(); this.register.bind(this)() }}>
-          <TextField style={{ margin: 5, width: "80%" }} id="name" value={this.state.name} required onChange={this._handleChange.bind(this)} label="Name" /><br />
-          <TextField style={{ margin: 5, width: "80%" }} id="age" value={this.state.age} required onChange={this._handleChange.bind(this)} label="Age" /><br />
-          <Button style={{ borderRadius: 50, margin: 10 }} variant="contained" color="primary" type="submit">Submit</Button>
-        </form>
+        <Divider />
       </div>
     );
   }
