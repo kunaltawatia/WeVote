@@ -5,7 +5,7 @@ import CreateBallot from "./components/createBallot";
 import NavBar from "./components/navbar";
 import Candidatelist from "./components/profile/candidate_list";
 import Profile from "./components/profile/profile";
-import Registration from "./components/registration/registration";
+import Database from "./components/database/database";
 import CreateDB from "./components/createDB/createDB";
 import Vote from "./components/Vote";
 import BuildPetition from "./components/buildPetition";
@@ -65,9 +65,9 @@ export default class App extends React.Component {
               )}
             />
             <Route
-              path="/registration"
+              path="/database"
               render={() => (
-                <Registration dbContractAddress={this.state.dbContractAddress}
+                <Database dbContractAddress={this.state.dbContractAddress}
                   _handleContractAddress={this._changeContractAddress.bind(this)} />
               )}
             />

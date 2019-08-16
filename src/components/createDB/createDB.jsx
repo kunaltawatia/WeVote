@@ -133,7 +133,7 @@ export default class CreateBallot extends React.Component {
                         <div style={{ marginTop: "2rem" }}>
                             <Grid container direction="row" spacing={2}>
                                 <Grid item xs={6}>
-                                    <Link to="/registration" style={{ textDecoration: "none" }}>
+                                    <Link to="/database" style={{ textDecoration: "none" }}>
                                         <Fab size="small" color="secondary" variant="extended">
                                             Load Contract
                       </Fab>

@@ -22,6 +22,9 @@ contract publicDB{
         return authorisation[addr];
     }
     event detailsAdded(address addr,string details);
+    event voterAuthorised(address voter);
+    event voterUnauthorised(address voter);
+    event voterReported(address voter);
     function addDetails(string memory detail) public{
         if(voterIndex[msg.sender] == 0 ){
             voters.push(msg.sender);
@@ -36,13 +39,16 @@ contract publicDB{
     function authorise(address voterAddress) public{
         require(msg.sender == owner,"Only Owner Can Authorise");
         authorisation[voterAddress] = true;
+        emit voterAuthorised(voterAddress);
     }
     function unAuthorise(address voterAddress) public{
         require(msg.sender == owner,"Only Owner Can Unauthorise");
         authorisation[voterAddress] = false;
+        emit voterUnauthorised(voterAddress);
     }
     function report(address voterAddress) public{
         require(authorisation[msg.sender] == true,"Only Authorised voter can report");
         reports[voterAddress] = reports[voterAddress] + 1;
+        emit voterReported(voterAddress);
     }
 }

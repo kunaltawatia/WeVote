@@ -27,7 +27,7 @@ export default class Navbar extends React.Component {
       onClick={this.toggleDrawer(side, false)}
       onKeyDown={this.toggleDrawer(side, false)}
     >
-      <div style={{ width: '15vw' }} >
+      <div style={{ width: '15vw',minWidth:350 }} >
         <img style={{ width: "100%" }} src="./img/logoBig.jpg" alt="Logo" />
         <List style={{ margin: 20 }}>
           <ListItem id="home">
@@ -35,25 +35,25 @@ export default class Navbar extends React.Component {
               <ListItemText primary='Home' />
             </a>
           </ListItem>
+          <ListItem><a href="./vote" style={{ textDecoration: 'none', color: 'black' }}>
+            <ListItemText primary='Vote' />
+          </a>
+          </ListItem>
           <ListItem>
             <a href="./createpoll" style={{ textDecoration: 'none', color: 'black' }}>
-              <ListItemText primary='Create Poll' />
+              <ListItemText primary='Create Poll Contract' />
             </a>
           </ListItem>
           <ListItem><a href="./buildpetition" style={{ textDecoration: 'none', color: 'black' }}>
-            <ListItemText primary='Build Petition' />
+            <ListItemText primary='Build Petition Contract' />
           </a>
           </ListItem>
           <ListItem><a href="./createdatabase" style={{ textDecoration: 'none', color: 'black' }}>
-            <ListItemText primary='Create Database' />
+            <ListItemText primary='Create Database Contract' />
           </a>
           </ListItem>
-          <ListItem><a href="./registration" style={{ textDecoration: 'none', color: 'black' }}>
-            <ListItemText primary='Database Interaction' />
-          </a>
-          </ListItem>
-          <ListItem><a href="./vote" style={{ textDecoration: 'none', color: 'black' }}>
-            <ListItemText primary='Vote' />
+          <ListItem><a href="./database" style={{ textDecoration: 'none', color: 'black' }}>
+            <ListItemText primary='Database Contract Interaction' />
           </a>
           </ListItem>
         </List>

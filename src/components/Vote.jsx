@@ -304,7 +304,7 @@ class VotingComponent extends React.Component {
     }
     if (this.state.redirect) {
       return (
-        <Redirect to='/registration' />
+        <Redirect to='/database' />
       )
     }
     var sum = 0;
@@ -320,7 +320,7 @@ class VotingComponent extends React.Component {
           width: "100%"
         }}>
           {this.state.options && this.state.options.map((option, index) => {
-            sum = sum + parseInt(this.state.result[index]);
+            sum = parseInt(sum) + parseInt(this.state.result[index]);
             console.log('result', this.state.result[index]);
             return (
               <div style={{
@@ -377,14 +377,14 @@ class VotingComponent extends React.Component {
         </Grid>
         {this.state.notRegistered ? <Button style={{borderRadius:50,margin:10}} onClick={() => { this.props._handleContractAddress({ dbContractAddress: this.state.dbAddr }); this.setState({ redirect: true }) }} variant="contained" color="secondary">Register To Vote</Button> : <div />}
         <Card style={{ borderRadius: 50 }} className="card">
-          <Typography style={{ fontWeight: 'bold' }}>{this.props.contractAddress}<br />{sum} VOTES CASTED</Typography>
-          {this.state.votersVoted && <div>
+        <Typography style={{ margin: 20,fontFamily:'DM Serif Text' }}>Ballot Contract:<br/>{this.props.contractAddress}<br />{this.state.result} Votes Casted</Typography>
+          {/* {this.state.votersVoted && <div>
             {this.state.votersVoted.map((voter) => {
               return (
                 <Typography style={{ fontWeight: 'bold', margin: 20 }}>{voter}</Typography>
               )
             })}
-          </div>}
+          </div>} */}
         </Card>
       </div>
     );
@@ -556,7 +556,7 @@ class PetitionComponent extends React.Component {
     }
     if (this.state.redirect) {
       return (
-        <Redirect to='/registration' />
+        <Redirect to='/database' />
       )
     }
     return (
@@ -572,14 +572,14 @@ class PetitionComponent extends React.Component {
           Sign Petition
         </Button>
         <Card style={{ borderRadius: 50 }} className="card">
-          <Typography style={{ fontWeight: 'bold', margin: 20 }}>{this.props.contractAddress}<br />{this.state.result} SIGNED THIS PETITION</Typography>
-          {this.state.votersVoted && <div>
+          <Typography style={{  margin: 20,fontFamily:'DM Serif Text' }}>Ballot Contract:<br/>{this.props.contractAddress}<br />{this.state.result} signed this petition</Typography>
+          {/* {this.state.votersVoted && <div>
             {this.state.votersVoted.map((voter) => {
               return (
                 <Typography style={{ fontWeight: 'bold', margin: 20 }}>{voter}</Typography>
               )
             })}
-          </div>}
+          </div>} */}
         </Card>
       </div>
     );
