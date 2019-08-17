@@ -63,7 +63,7 @@ _onButtonClick() {
        
         return (
             <div style={{textAlign:'center'}}>
-               <h1> Hello </h1>
+              
                <TextField style={{padding: 24, color: 'white'}}
                             id="searchInput"
                             placeholder="Search By Name"   
