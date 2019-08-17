@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import CreateBallot from "./components/createBallot";
 import NavBar from "./components/navbar";
-import Election from "./components/election/home";
+import Election from "./components/profile/home";
 import Database from "./components/database/database";
 import CreateDB from "./components/createDB/createDB";
 import Vote from "./components/Vote";

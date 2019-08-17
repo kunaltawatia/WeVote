@@ -1,0 +1,21 @@
+[
+    {
+        "id": 1,
+        "name": "NARENDRA MODI",
+         "age": 69 ,
+         "dateofbirth": "17 september 1950",
+         "image" :"/candidate1.jpg",
+         "criminalrecord": 0,
+         "Indian": true
+    },
+    {
+        "id": 2,
+        "name": "RAHUL GANDHI",
+         "age": 49 ,
+         "dateofbirth": "19 June 1970",
+         "image" :"/candidate2.jpg",
+         "criminalrecord": 0,
+         "Indian": true
+    }
+
+]
