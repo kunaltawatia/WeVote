@@ -52,13 +52,27 @@ export default class CreateBallot extends React.Component {
         }
         // Non-DApp Browsers
         else {
-            alert("You have to install MetaMask extension for your browser !");
+            var provider = new Web3.providers.HttpProvider("https://wevote.blockchain.azure.com:3200/Zr6vQionvLVeneyF9fIkQZwA");
+            web3 = new Web3(provider);
+            // alert("You have to install MetaMask extension for your browser !");
+            dbContract = new web3.eth.Contract(db.abi);
+            web3.eth.personal.getAccounts().then(res => {
+                this.setState({ mobile: true });
+                accountaddress = res[1];
+            })
         }
     }
     _handleClick(event) {
         event.preventDefault();
+        var account = accountaddress;
+        if (!this.state.mobile) {
+            account = web3.givenProvider.selectedAddress;
+        }
+        else {
+            alert(account);
+        }
         this.setState({ loading: 1 });
-        var details = [this.state.name,this.state.age].join('_=_');
+        var details = [this.state.name, this.state.age].join('_=_');
         dbContract
             .deploy({
                 data: db.bytecode,
@@ -66,10 +80,10 @@ export default class CreateBallot extends React.Component {
             })
             .send(
                 {
-                    from: web3.givenProvider.selectedAddress,
-                    gas: 1308700,
+                    from: account,
+                    gas: 2000000,
                     gasPrice: web3.eth.gasPrice,
-                    gasLimit: 2000000
+                    gasLimit: 6000000
                 },
                 (error, Hash) => { }
             )
@@ -87,7 +101,7 @@ export default class CreateBallot extends React.Component {
                 contractAddress = receipt.contractAddress;
                 console.log(contractAddress);
                 this.setState({ loading: 3 });
-                this.props._handleContractAddress({ "dbContractAddress": contractAddress});
+                this.props._handleContractAddress({ "dbContractAddress": contractAddress });
             });
     }
 
@@ -140,7 +154,7 @@ export default class CreateBallot extends React.Component {
                                     </Link>
                                 </Grid>
                                 <Grid item xs={6} className="submit">
-                                    <Button  style={{borderRadius:50,margin:10}} 
+                                    <Button style={{ borderRadius: 50, margin: 10 }}
                                         color="primary"
                                         variant="contained"
                                         onClick={() => {
@@ -176,15 +190,15 @@ export default class CreateBallot extends React.Component {
             <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.6)', maxWidth: '60vw' }} className="card">
                 <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
                 <form onSubmit={this._handleClick}>
-                    <TextField style={{margin:5,width:"80%"}} required id="name" value={this.state.name} label="Database Owner Name" type="outlined" onChange={this._handleChange} />
-                    <TextField style={{margin:5,width:"80%"}} required id="age" value={this.state.age} label="Database Owner Age" type="outlined" onChange={this._handleChange}  />
+                    <TextField style={{ margin: 5, width: "80%" }} required id="name" value={this.state.name} label="Database Owner Name" type="outlined" onChange={this._handleChange} />
+                    <TextField style={{ margin: 5, width: "80%" }} required id="age" value={this.state.age} label="Database Owner Age" type="outlined" onChange={this._handleChange} />
 
                     <div style={{
                         textAlign: 'right',
                         margin: 10,
                         bottom: 0
                     }}>
-                        <Button  style={{borderRadius:50,margin:10}} variant="contained" color="secondary" type="submit">Create Database</Button>
+                        <Button style={{ borderRadius: 50, margin: 10 }} variant="contained" color="secondary" type="submit">Create Database</Button>
                     </div>
                 </form>
             </Card>

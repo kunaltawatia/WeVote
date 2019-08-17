@@ -63,7 +63,16 @@ export default class CreateBallot extends React.Component {
         }
         // Non-DApp Browsers
         else {
-            alert("You have to install MetaMask extension for your browser !");
+            var provider = new Web3.providers.HttpProvider("https://wevote.blockchain.azure.com:3200/Zr6vQionvLVeneyF9fIkQZwA");
+            web3 = new Web3(provider);
+            // alert("You have to install MetaMask extension for your browser !");
+            web3.eth.personal.getAccounts().then(res => {
+                this.setState({ mobile: true });
+                accountaddress = res[1];
+            })
+            ballotContract = new web3.eth.Contract(ballot.abi);
+            authenticatedBallotContract = new web3.eth.Contract(authenticatedBallot.abi);
+
         }
     }
     _handleClick(event) {
@@ -73,6 +82,13 @@ export default class CreateBallot extends React.Component {
         transactionHash = undefined;
         exp = [this.state.petitionTitle, this.state.petitionBody].join("_=_");
         que = this.state.optionCount;
+        var account = accountaddress;
+        if (!this.state.mobile) {
+          account = web3.givenProvider.selectedAddress;
+        }
+        else {
+          alert(account);
+        }
         ballotContract
             .deploy({
                 data: ballot.bytecode,
@@ -80,7 +96,7 @@ export default class CreateBallot extends React.Component {
             })
             .send(
                 {
-                    from: web3.givenProvider.selectedAddress,
+                    from: account,
                     gas: 1308700,
                     gasPrice: web3.eth.gasPrice,
                     gasLimit: 2000000
@@ -154,7 +170,7 @@ export default class CreateBallot extends React.Component {
                                     </Link>
                                 </Grid>
                                 <Grid item xs={6} className="submit">
-                                    <Button  style={{borderRadius:50,margin:10}} 
+                                    <Button style={{ borderRadius: 50, margin: 10 }}
                                         color="primary"
                                         variant="contained"
                                         onClick={() => {
@@ -194,9 +210,9 @@ export default class CreateBallot extends React.Component {
                                 spacing={2}
                             >
                                 <Grid item>
-                                    <div style={{borderRadius:10,padding:"2px 10px 2px 10px"}} class="question-input-root">
+                                    <div style={{ borderRadius: 10, padding: "2px 10px 2px 10px" }} class="question-input-root">
                                         <textarea
-                                            style={{ resize: "none"}}
+                                            style={{ resize: "none" }}
                                             className="title-input"
                                             id="petitionTitle"
                                             label="Petition Title"
@@ -233,7 +249,7 @@ export default class CreateBallot extends React.Component {
                                     <Grid item container direction="row" spacing={6}>
                                         <Grid item xs={12} style={{ display: 'flex', justifyContent: 'space-between' }}>
 
-                                            <Button  style={{borderRadius:50,margin:10}} 
+                                            <Button style={{ borderRadius: 50, margin: 10 }}
                                                 color="primary"
                                                 variant="contained"
                                                 type="submit"

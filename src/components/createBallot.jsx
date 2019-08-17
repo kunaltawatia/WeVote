@@ -66,11 +66,27 @@ export default class CreateBallot extends React.Component {
     }
     // Non-DApp Browsers
     else {
-      alert("You have to install MetaMask extension for your browser !");
+      var provider = new Web3.providers.HttpProvider("https://wevote.blockchain.azure.com:3200/Zr6vQionvLVeneyF9fIkQZwA");
+      web3 = new Web3(provider);
+      web3.eth.personal.getAccounts().then(res => {
+        this.setState({ mobile: true });
+        accountaddress = res[1];
+      })
+      ballotContract = new web3.eth.Contract(ballot.abi);
+      authenticatedBallotContract = new web3.eth.Contract(authenticatedBallot.abi);
+
+      // alert("You have to install MetaMask extension for your browser !");
     }
   }
   _handleClick(event) {
     event.preventDefault();
+    var account = accountaddress;
+    if (!this.state.mobile) {
+      account = web3.givenProvider.selectedAddress;
+    }
+    else {
+      alert(account);
+    }
     if (this.state.addVoterAuthentication) {
       this.setState({ loading: 1 });
       contractAddress = undefined;
@@ -85,7 +101,7 @@ export default class CreateBallot extends React.Component {
         })
         .send(
           {
-            from: web3.givenProvider.selectedAddress,
+            from: account,
             gas: 1308700,
             gasPrice: web3.eth.gasPrice,
             gasLimit: 2000000
@@ -124,7 +140,7 @@ export default class CreateBallot extends React.Component {
         })
         .send(
           {
-            from: web3.givenProvider.selectedAddress,
+            from: account,
             gas: 1308700,
             gasPrice: web3.eth.gasPrice,
             gasLimit: 2000000

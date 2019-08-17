@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import CreateBallot from "./components/createBallot";
 import NavBar from "./components/navbar";
-import Candidatelist from "./components/profile/candidate_list";
-import Profile from "./components/profile/profile";
+import Election from "./components/election/home";
 import Database from "./components/database/database";
 import CreateDB from "./components/createDB/createDB";
 import Vote from "./components/Vote";
@@ -83,20 +82,13 @@ export default class App extends React.Component {
               )}
             />
 
-
             <Route
               exact
-              path="/profile"
+              path="/election"
               render={() => (
-                <div>
-                  <NavBar />
-                  <Candidatelist />
-                </div>
-
+                  <Election />
               )}
             />
-
-            <Route path="/profile/:id" render={(props) => <Profile {...props} />} />
 
           </Router>
         </div>
