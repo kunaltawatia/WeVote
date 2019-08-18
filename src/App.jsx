@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import CreateBallot from "./components/createBallot";
 import NavBar from "./components/navbar";
-import Election from "./components/profile/home";
+import ElectionVoting from "./components/election/electoralVoting";
+import ElectionRegistration from "./components/election/electoralRegistration";
 import Database from "./components/database/database";
 import CreateDB from "./components/createDB/createDB";
 import Vote from "./components/Vote";
@@ -70,9 +71,6 @@ export default class App extends React.Component {
                   _handleContractAddress={this._changeContractAddress.bind(this)} />
               )}
             />
-
-           
-
             <Route
               path="/createDatabase"
               render={() => (
@@ -81,15 +79,20 @@ export default class App extends React.Component {
                 />
               )}
             />
-
             <Route
               exact
-              path="/election"
+              path="/election/registration"
               render={() => (
-                  <Election />
+                  <ElectionRegistration />
               )}
             />
-
+            <Route
+              exact
+              path="/election/voting"
+              render={() => (
+                  <ElectionVoting />
+              )}
+            />
           </Router>
         </div>
       </div>
