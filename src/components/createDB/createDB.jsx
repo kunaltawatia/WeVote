@@ -180,14 +180,14 @@ export default class CreateBallot extends React.Component {
         }
         if (this.state.loading) {
             return (
-                <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.6)', maxWidth: '60vw' }} className="card">
+                <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.95)', maxWidth: '60vw' }} className="card">
                     <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
                     {this.dbCard()}
                 </Card>
             )
         }
         return (
-            <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.6)', maxWidth: '60vw' }} className="card">
+            <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.95)', maxWidth: '60vw' }} className="card">
                 <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
                 <form onSubmit={this._handleClick}>
                     <TextField style={{ margin: 5, width: "80%" }} required id="name" value={this.state.name} label="Database Owner Name" type="outlined" onChange={this._handleChange} />

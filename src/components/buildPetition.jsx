@@ -196,7 +196,7 @@ export default class CreateBallot extends React.Component {
             )
         }
         return (
-            <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.6)', maxWidth: '60vw' }} className="card">
+            <Card style={{ borderRadius: 50, backgroundColor: 'rgb(192,192,192,0.95)', maxWidth: '60vw' }} className="card">
                 <img src="/favicon.ico" alt="/favicon.ico" className="logo" />
                 {this.state.loading && !this.state.contractLoaded ? (
                     this.ballotCard()

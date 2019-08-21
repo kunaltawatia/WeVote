@@ -60,14 +60,18 @@ class Registration extends React.Component {
             alert("Click an Image");
         }
         else {
-            fetch("/electoralVoting/register", {
+            fetch("http://172.30.17.149:3200/electoralVoting/register", {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Access-Control-Allow-Origin": "*"
                 },
                 body: JSON.stringify({ img: this.state.img, voterAddress: voterAddress, aadharID: aadharID, pass: pass, alarmpass: alarmpass, email: email })
             })
+            .then((err)=>{
+                console.log(err);
+            });
         }
     }
     _handleImage(img) {
@@ -200,7 +204,7 @@ class WebcamCapture extends React.Component {
 
     render() {
         const videoConstraints = {
-            width: 1280,
+            width: 720,
             height: 720,
             facingMode: "user"
         };
@@ -211,16 +215,15 @@ class WebcamCapture extends React.Component {
                     <Grid item xs={this.state.image ? 6 : 12}>
                         <Webcam
                             audio={false}
-                            height={350}
                             ref={this.setRef}
                             screenshotFormat="image/jpeg"
-                            width={350}
+                            width="100%"
                             videoConstraints={videoConstraints}
                         />
                     </Grid>
                     {this.state.image &&
                         <Grid item xs={6} style={{ alignSelf: 'center' }}>
-                            <img src={this.state.image} alt="shot" />
+                            <img src={this.state.image} alt="shot" width="100%"/>
                         </Grid>
                     }
                 </Grid>
