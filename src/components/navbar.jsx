@@ -44,6 +44,11 @@ export default class Navbar extends React.Component {
               <ListItemText primary='Create Poll Contract' />
             </a>
           </ListItem>
+          <ListItem>
+            <a href="./profile" style={{ textDecoration: 'none', color: 'black' }}>
+              <ListItemText primary='Candidate Comparator' />
+            </a>
+          </ListItem>
           <ListItem><a href="./buildpetition" style={{ textDecoration: 'none', color: 'black' }}>
             <ListItemText primary='Build Petition Contract' />
           </a>

@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import CreateBallot from "./components/createBallot";
 import NavBar from "./components/navbar";
+import Profile from "./components/profile/home";
 import ElectionVoting from "./components/election/electoralVoting";
+import Checkprofile from "./components/profile/profile"
 import ElectionRegistration from "./components/election/electoralRegistration";
 import Database from "./components/database/database";
 import CreateDB from "./components/createDB/createDB";
@@ -37,6 +39,15 @@ export default class App extends React.Component {
                 <Home />
               )}
             />
+            <Route path="/profile/:id" render={(props) => <div> <Checkprofile {...props} /></div>}/> 
+            <Route
+              exact
+              path="/profile"
+              render={() => (
+                <Profile />
+              )}
+            />
+
             <Route
               path="/createPoll"
               render={() => (
